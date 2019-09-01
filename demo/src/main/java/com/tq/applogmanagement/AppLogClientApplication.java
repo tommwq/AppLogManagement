@@ -1,11 +1,11 @@
 package com.tq.applogmanagement;
 
+import java.util.Date;
+import java.util.UUID;
 import com.tq.applogmanagement.agent.LogAgent;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-
-import java.util.UUID;
 
 @SpringBootApplication
 public class AppLogClientApplication implements CommandLineRunner {
@@ -48,10 +48,12 @@ public class AppLogClientApplication implements CommandLineRunner {
     logger.error(error);
 
     // record user defined message
-    logger.log("bye");
+    while (true) {
+      Thread.sleep(3000);
+      logger.print(new Date());
+    }
 
-    Thread.sleep(10000);
-    agent.shutdown();
-    logger.close();
+    // agent.shutdown();
+    // logger.close();
   }
 }
