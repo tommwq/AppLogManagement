@@ -31,8 +31,6 @@ public class LogReportSession implements StreamObserver<Command> {
 
   @Override
   public void onNext(Command command) {
-    System.err.println(command.toString());
-    
     long sequence = command.getSequence();
     int count = command.getCount();
 
@@ -43,35 +41,19 @@ public class LogReportSession implements StreamObserver<Command> {
       count = sequence < DEFAULT_LOG_COUNT ? (int) sequence : DEFAULT_LOG_COUNT;
     }
 
-    // agent.reportLog(Logger.instance().queryLog(sequence, count));
-
-    List<Log> logList = logger.queryLog(sequence, count);
-    logList.stream().forEach(log -> logOutputStream.onNext(log));
+    logger.queryLog(sequence, count)
+      .stream()
+      .forEach(log -> logOutputStream.onNext(log));
   }
                 
   @Override
   public void onError(Throwable error) {
-    System.err.println(error.toString());
-    // 通知agent失败。
-    // logOutputStream.onCompleted();
     // TODO 重写重连机制。
-    // new Thread(() -> {
-    //     try {
-    //       Thread.sleep(10 * 1000);
-    //       LogAgent.this.start();
-    //     } catch (InterruptedException e) {
-    //       // ignore
-    //     }
-    // }).start();
   }
                 
   @Override
   public void onCompleted() {
-    System.err.println("complete");
     // TODO 通知agent。
-    // logOutputStream.onCompleted();
-    // logOutputStream = null;
-    // System.err.println("complete");
   }
 
   public void reportDeviceAndAppInfo() {
@@ -82,8 +64,7 @@ public class LogReportSession implements StreamObserver<Command> {
     logOutputStream = aStream;
   }
 
-  public void report(Log log) {
-    System.err.println("" + logOutputStream + " " + log);
+  public void reportLog(Log log) {
     logOutputStream.onNext(log);
   }
 }

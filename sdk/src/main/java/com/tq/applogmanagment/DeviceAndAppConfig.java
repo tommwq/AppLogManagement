@@ -84,5 +84,4 @@ public class DeviceAndAppConfig {
     moduleVersions.put(module, version);
     return this;
   }
-
 }

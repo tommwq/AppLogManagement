@@ -4,19 +4,14 @@ import com.tq.applogmanagement.AppLogManagementProto.Command;
 import com.tq.applogmanagement.AppLogManagementProto.Log;
 import com.tq.applogmanagement.AppLogManagementProto.LogType;
 import com.tq.applogmanagement.AppLogManagementProto.ModuleInfo;
-
-import com.tq.applogmanagement.LogManagementServiceGrpc;
 import com.tq.applogmanagement.Logger;
+import com.tq.applogmanagement.LogManagementServiceGrpc;
 import com.tq.applogmanagement.SimpleLogger;
-
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import io.grpc.stub.StreamObserver;
 import java.util.concurrent.TimeUnit;
 import java.util.List;
-import static com.tq.applogmanagement.Constant.DEFAULT_LOG_COUNT;
-import static com.tq.applogmanagement.Constant.INVALID_COUNT;
-import static com.tq.applogmanagement.Constant.INVALID_SEQUENCE;
 
 public class LogAgent implements Logger.LogSubscriber {
 
@@ -34,14 +29,13 @@ public class LogAgent implements Logger.LogSubscriber {
   }
 
   public void shutdown() throws InterruptedException {
-    channel.shutdown().awaitTermination(30, TimeUnit.SECONDS);
+    channel.shutdown()
+      .awaitTermination(30, TimeUnit.SECONDS);
   }
 
   @Override
   public void onLog(Log log) {
-    session.report(log);
-    // TODO
-    System.err.println("report log " + log.getHeader().toString());
+    session.reportLog(log);
   }
 
   public void start() throws InterruptedException {
