@@ -32,7 +32,7 @@ message LogHeader {
 }
 
 // App上报给服务器的日志。
-message Log {
+message LogRecord {
   LogHeader header = 1;
   google.protobuf.Any body = 2;
 }
@@ -93,11 +93,11 @@ message Empty {}
 
 service LogManagementService {
   // 客户端向日志服务器上报日志。
-  rpc ReportLog (stream Log) returns (stream Command);
+  rpc ReportLog (stream LogRecord) returns (stream Command);
   // 心跳。
   rpc Heartbeat (stream Empty) returns (stream Empty);
   // 日志节点要求另一个节点转发客户端日志。
-  rpc QueryLog(Command) returns (stream Log);
+  rpc QueryLog(Command) returns (stream LogRecord);
   // 查询在线设备。
   rpc QueryOnlineDevice(Empty) returns (stream DeviceAndAppInfo);
   // TODO 设置设备登录通知。

@@ -1,7 +1,7 @@
 package com.tq.applogmanagement.agent;
 
 import com.tq.applogmanagement.AppLogManagementProto.Command;
-import com.tq.applogmanagement.AppLogManagementProto.Log;
+import com.tq.applogmanagement.AppLogManagementProto.LogRecord;
 import com.tq.applogmanagement.AppLogManagementProto.LogType;
 import com.tq.applogmanagement.AppLogManagementProto.ModuleInfo;
 import com.tq.applogmanagement.Logger;
@@ -13,7 +13,7 @@ import io.grpc.stub.StreamObserver;
 import java.util.concurrent.TimeUnit;
 import java.util.List;
 
-public class LogAgent implements Logger.LogSubscriber {
+public class LogAgent implements Logger.LogRecordSubscriber {
 
   private final ManagedChannel channel;
   private final LogManagementServiceGrpc.LogManagementServiceStub stub;
@@ -34,7 +34,7 @@ public class LogAgent implements Logger.LogSubscriber {
   }
 
   @Override
-  public void onLog(Log log) {
+  public void onLogRecord(LogRecord log) {
     session.reportLog(log);
   }
 

@@ -3,7 +3,7 @@ package com.tq.applogmanagement;
 import com.tq.applogmanagement.AppLogManagementProto.Command;
 import com.tq.applogmanagement.AppLogManagementProto.DeviceAndAppInfo;
 import com.tq.applogmanagement.AppLogManagementProto.Empty;
-import com.tq.applogmanagement.AppLogManagementProto.Log;
+import com.tq.applogmanagement.AppLogManagementProto.LogRecord;
 import io.grpc.stub.StreamObserver;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.Set;
@@ -23,7 +23,7 @@ public class LogManagementService extends LogManagementServiceGrpc.LogManagement
   }
   
   @Override
-  public StreamObserver<Log> reportLog(StreamObserver<Command> outputStream) {
+  public StreamObserver<LogRecord> reportLog(StreamObserver<Command> outputStream) {
     LogSession session = new LogSession(outputStream, deviceTable);
     return session;
   }
@@ -33,6 +33,6 @@ public class LogManagementService extends LogManagementServiceGrpc.LogManagement
   }
 
   @Override
-  public void queryLog(Command input, StreamObserver<Log> outputStream) {
+  public void queryLog(Command input, StreamObserver<LogRecord> outputStream) {
   }
 }

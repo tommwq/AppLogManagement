@@ -2,7 +2,7 @@ package com.tq.applogmanagement;
 
 import com.google.protobuf.Any;
 import com.google.protobuf.InvalidProtocolBufferException;
-import com.tq.applogmanagement.AppLogManagementProto.Log;
+import com.tq.applogmanagement.AppLogManagementProto.LogRecord;
 import com.tq.applogmanagement.AppLogManagementProto.Command;
 import com.tq.applogmanagement.AppLogManagementProto.DeviceAndAppInfo;
 import com.tq.applogmanagement.storage.LogStorage;
@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 import org.springframework.stereotype.Component;
 
-public class LogSession implements StreamObserver<Log> {
+public class LogSession implements StreamObserver<LogRecord> {
 
   private String deviceId = "";
   private ConcurrentHashMap<String, LogSession> deviceTable;
@@ -25,7 +25,7 @@ public class LogSession implements StreamObserver<Log> {
   }
       
   @Override
-  public void onNext(Log newLog) {
+  public void onNext(LogRecord newLog) {
     Any body = newLog.getBody();
     if (body.is(DeviceAndAppInfo.class)) {
       try {

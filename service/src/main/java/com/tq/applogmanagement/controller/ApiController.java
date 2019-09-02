@@ -1,6 +1,6 @@
 package com.tq.applogmanagement.controller;
 
-import com.tq.applogmanagement.AppLogManagementProto.Log;
+import com.tq.applogmanagement.AppLogManagementProto.LogRecord;
 import com.tq.applogmanagement.LogManagementServer;
 import com.tq.applogmanagement.LogManagementService;
 import java.util.ArrayList;

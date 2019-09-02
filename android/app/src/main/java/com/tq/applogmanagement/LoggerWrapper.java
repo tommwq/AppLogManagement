@@ -19,11 +19,11 @@ public class LoggerWrapper implements Logger {
     agent = new LogAgent(aHost, aPort);
   }
 
-  public void setSubscriber(LogSubscriber aSubscriber) {
+  public void setSubscriber(LogRecordSubscriber aSubscriber) {
     delegate.setSubscriber(aSubscriber);
   }
 
-  public void open(StorageConfig aConfig, DeviceAndAppConfig aInfo) throws IOException {
+  public void open(StorageConfig aConfig, DeviceAndAppConfig aInfo) {
     delegate.open(aConfig, aInfo);
     try {
       agent.start();
@@ -32,7 +32,7 @@ public class LoggerWrapper implements Logger {
     }
   }
   
-  public Log deviceAndAppInfoLog() {
+  public LogRecord deviceAndAppInfoLog() {
     return delegate.deviceAndAppInfoLog();
   }
 
@@ -61,8 +61,8 @@ public class LoggerWrapper implements Logger {
   public void error(Throwable error) {
     delegate.error(error);
   }
-  public List<Log> queryLog(long sequence, int count) {
-    return delegate.queryLog(sequence, count);
+  public List<LogRecord> queryLogRecord(long sequence, int count) {
+    return delegate.queryLogRecord(sequence, count);
   }
   public long maxSequence() {
     return delegate.maxSequence();

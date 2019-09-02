@@ -5,7 +5,7 @@ import com.google.protobuf.InvalidProtocolBufferException;
 import com.tq.applogmanagement.AppLogManagementProto.Command;
 import com.tq.applogmanagement.AppLogManagementProto.DeviceAndAppInfo;
 import com.tq.applogmanagement.AppLogManagementProto.ExceptionInfo;
-import com.tq.applogmanagement.AppLogManagementProto.Log;
+import com.tq.applogmanagement.AppLogManagementProto.LogRecord;
 import com.tq.applogmanagement.AppLogManagementProto.LogHeader;
 import com.tq.applogmanagement.AppLogManagementProto.LogType;
 import com.tq.applogmanagement.AppLogManagementProto.MethodAndObjectInfo;
@@ -24,13 +24,13 @@ import java.util.concurrent.LinkedTransferQueue;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import com.tq.applogmanagement.Logger.LogSubscriber;
+import com.tq.applogmanagement.Logger.LogRecordSubscriber;
 import com.tq.applogmanagement.DeviceAndAppConfig;
 
 public class LogUtil {
   
-  public static Log newDeviceAndAppInfoLog(long sequence, DeviceAndAppConfig info) {
-    return Log.newBuilder()
+  public static LogRecord newDeviceAndAppInfoLog(long sequence, DeviceAndAppConfig info) {
+    return LogRecord.newBuilder()
       .setHeader(LogHeader.newBuilder()
                  .setSequence(sequence)
                  .setTime(Util.currentTime())
@@ -56,8 +56,8 @@ public class LogUtil {
       .build();
   }
   
-  public static Log newMethodAndObjectInfoLog(long sequence, StackTraceElement frame, Object... variables) {
-    return Log.newBuilder()
+  public static LogRecord newMethodAndObjectInfoLog(long sequence, StackTraceElement frame, Object... variables) {
+    return LogRecord.newBuilder()
       .setHeader(LogHeader.newBuilder()
                  .setSequence(sequence)
                  .setTime(Util.currentTime())
@@ -80,8 +80,8 @@ public class LogUtil {
       .build();
   }
   
-  public static Log newExceptionInfoLog(long sequence, Throwable exception) {
-    return Log.newBuilder()
+  public static LogRecord newExceptionInfoLog(long sequence, Throwable exception) {
+    return LogRecord.newBuilder()
       .setHeader(LogHeader.newBuilder()
                  .setSequence(sequence)
                  .setTime(Util.currentTime())
@@ -104,8 +104,8 @@ public class LogUtil {
       .build();
   }
 
-  public static Log newUserDefinedLog(long sequence, StackTraceElement frame, String message) {
-    return Log.newBuilder()
+  public static LogRecord newUserDefinedLog(long sequence, StackTraceElement frame, String message) {
+    return LogRecord.newBuilder()
       .setHeader(LogHeader.newBuilder()
                  .setSequence(sequence)
                  .setTime(Util.currentTime())

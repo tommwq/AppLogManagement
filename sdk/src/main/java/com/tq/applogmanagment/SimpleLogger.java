@@ -5,7 +5,7 @@ import com.google.protobuf.InvalidProtocolBufferException;
 import com.tq.applogmanagement.AppLogManagementProto.Command;
 import com.tq.applogmanagement.AppLogManagementProto.DeviceAndAppInfo;
 import com.tq.applogmanagement.AppLogManagementProto.ExceptionInfo;
-import com.tq.applogmanagement.AppLogManagementProto.Log;
+import com.tq.applogmanagement.AppLogManagementProto.LogRecord;
 import com.tq.applogmanagement.AppLogManagementProto.LogHeader;
 import com.tq.applogmanagement.AppLogManagementProto.LogType;
 import com.tq.applogmanagement.AppLogManagementProto.MethodAndObjectInfo;
@@ -25,7 +25,7 @@ import java.util.concurrent.LinkedTransferQueue;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import com.tq.applogmanagement.Logger.LogSubscriber;
+import com.tq.applogmanagement.Logger.LogRecordSubscriber;
 
 public class SimpleLogger implements Logger {
 
@@ -33,11 +33,11 @@ public class SimpleLogger implements Logger {
 
   private DeviceAndAppConfig info = new DeviceAndAppConfig();
   private long sequence = 1;
-  private LinkedTransferQueue<Log> logQueue = new LinkedTransferQueue<>();
+  private LinkedTransferQueue<LogRecord> logQueue = new LinkedTransferQueue<>();
   protected Thread backgroundWriteThread = null;
   private LogStorage storage;
-  private Log deviceAndAppInfoLog;
-  private LogSubscriber subscriber;
+  private LogRecord deviceAndAppInfoLog;
+  private LogRecordSubscriber subscriber;
   
   private SimpleLogger() {}
 
@@ -46,11 +46,11 @@ public class SimpleLogger implements Logger {
     public void run() {
       try {
         while (true) {
-          Log log = instance.logQueue.take();
+          LogRecord log = instance.logQueue.take();
           instance.write(log);
         }
       } catch (InterruptedException e) {
-        ArrayList<Log> tails = new ArrayList<>();
+        ArrayList<LogRecord> tails = new ArrayList<>();
         tails.addAll(instance.logQueue);
         tails.stream().forEach(log -> {try {instance.write(log);} catch (Exception ex){}});
       } finally {
@@ -59,7 +59,7 @@ public class SimpleLogger implements Logger {
     }
   }
 
-  public void setSubscriber(LogSubscriber aSubscriber) {
+  public void setSubscriber(LogRecordSubscriber aSubscriber) {
     subscriber = aSubscriber;
   }
 
@@ -102,7 +102,7 @@ public class SimpleLogger implements Logger {
     deviceAndAppInfoLog = LogUtil.newDeviceAndAppInfoLog(nextSequence(), info);
   }
 
-  public Log deviceAndAppInfoLog() {
+  public LogRecord deviceAndAppInfoLog() {
     return deviceAndAppInfoLog;
   }
 
@@ -117,7 +117,7 @@ public class SimpleLogger implements Logger {
     }
   }
 
-  private void printLog(Log log, PrintStream printStream) {
+  private void printLog(LogRecord log, PrintStream printStream) {
     printStream.print(log.getHeader());
     Any any = log.getBody();
 
@@ -137,13 +137,13 @@ public class SimpleLogger implements Logger {
     printStream.println();
   }
 
-  private void write(Log log) {
+  private void write(LogRecord log) {
     try {
       storage.write(log);
       // TODO test
       if (subscriber != null) {
         // System.err.println("post log");
-        subscriber.onLog(log);
+        subscriber.onLogRecord(log);
       }
     } catch (IOException e) {
       // TODO 根据策略决定忽略或强制退出进程。
@@ -180,7 +180,7 @@ public class SimpleLogger implements Logger {
     write(LogUtil.newExceptionInfoLog(nextSequence(), error));
   }
 
-  public List<Log> queryLog(long sequence, int count) {
+  public List<LogRecord> queryLogRecord(long sequence, int count) {
     return storage.read(sequence, count);
   }
 

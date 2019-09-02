@@ -1,6 +1,6 @@
 package com.tq.applogmanagement.storage;
 
-import com.tq.applogmanagement.AppLogManagementProto.Log;
+import com.tq.applogmanagement.AppLogManagementProto.LogRecord;
 import com.google.protobuf.InvalidProtocolBufferException;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -270,7 +270,7 @@ public class LogStorage implements BlockStorage {
         return data;
     }
 
-    synchronized public void write(Log log) throws IOException {
+    synchronized public void write(LogRecord log) throws IOException {
         if (!logBlock.tryInsertLog(log)) {
             syncAndMoveForward();
 
@@ -283,14 +283,14 @@ public class LogStorage implements BlockStorage {
         syncAnchor();
     }
 
-    synchronized public List<Log> read(long sequence, int count) {
-        ArrayList<Log> records = new ArrayList<>();
+    synchronized public List<LogRecord> read(long sequence, int count) {
+        ArrayList<LogRecord> records = new ArrayList<>();
 
         if (sequence > logBlock.maxSequence()) {
             return records;
         }
 
-        Predicate<Log> filter = (log) -> {
+        Predicate<LogRecord> filter = (log) -> {
             // long seq = log.getSequence();
             // return (seq > sequence - count && seq <= sequence);
           return true;

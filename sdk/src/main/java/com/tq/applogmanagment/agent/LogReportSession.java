@@ -1,7 +1,7 @@
 package com.tq.applogmanagement.agent;
 
 import com.tq.applogmanagement.AppLogManagementProto.LogType;
-import com.tq.applogmanagement.AppLogManagementProto.Log;
+import com.tq.applogmanagement.AppLogManagementProto.LogRecord;
 import com.tq.applogmanagement.AppLogManagementProto.Command;
 import com.tq.applogmanagement.AppLogManagementProto.ModuleInfo;
 import com.tq.applogmanagement.LogManagementServiceGrpc;
@@ -22,7 +22,7 @@ import static com.tq.applogmanagement.Constant.INVALID_SEQUENCE;
 public class LogReportSession implements StreamObserver<Command> {
 
   private LogAgent agent;
-  private StreamObserver<Log> logOutputStream;
+  private StreamObserver<LogRecord> logOutputStream;
   private static final Logger logger = SimpleLogger.instance();
   
   public LogReportSession(LogAgent aAgent) {
@@ -41,7 +41,7 @@ public class LogReportSession implements StreamObserver<Command> {
       count = sequence < DEFAULT_LOG_COUNT ? (int) sequence : DEFAULT_LOG_COUNT;
     }
 
-    logger.queryLog(sequence, count)
+    logger.queryLogRecord(sequence, count)
       .stream()
       .forEach(log -> logOutputStream.onNext(log));
   }
@@ -60,11 +60,11 @@ public class LogReportSession implements StreamObserver<Command> {
     logOutputStream.onNext(logger.deviceAndAppInfoLog());
   }
 
-  public void setLogOutputStream(StreamObserver<Log> aStream) {
+  public void setLogOutputStream(StreamObserver<LogRecord> aStream) {
     logOutputStream = aStream;
   }
 
-  public void reportLog(Log log) {
+  public void reportLog(LogRecord log) {
     logOutputStream.onNext(log);
   }
 }

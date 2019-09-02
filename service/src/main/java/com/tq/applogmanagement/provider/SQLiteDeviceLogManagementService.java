@@ -4,7 +4,7 @@ import com.tq.applogmanagement.api.DeviceLogManagementService;
 import com.tq.applogmanagement.AppLogManagementProto.Command;
 import com.tq.applogmanagement.AppLogManagementProto.DeviceAndAppInfo;
 import com.tq.applogmanagement.AppLogManagementProto.Empty;
-import com.tq.applogmanagement.AppLogManagementProto.Log;
+import com.tq.applogmanagement.AppLogManagementProto.LogRecord;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -117,13 +117,13 @@ public class SQLiteDeviceLogManagementService implements DeviceLogManagementServ
     }
   }
 
-  public List<Log> readLogCache(String deviceId) {
+  public List<LogRecord> readLogCache(String deviceId) {
     return null;
   }
 
-  public void appendLogCache(String deviceId, List<Log> logList) {
+  public void appendLogCache(String deviceId, List<LogRecord> logList) {
   }
 
-  public void appendLogCache(String deviceId, Log log) {
+  public void appendLogCache(String deviceId, LogRecord log) {
   }
 }

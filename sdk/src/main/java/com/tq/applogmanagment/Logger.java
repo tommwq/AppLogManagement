@@ -1,12 +1,12 @@
 package com.tq.applogmanagement;
 
-import com.tq.applogmanagement.AppLogManagementProto.Log;
+import com.tq.applogmanagement.AppLogManagementProto.LogRecord;
 import java.util.List;
 
 public interface Logger {
 
-  public interface LogSubscriber {
-    void onLog(Log log);
+  public interface LogRecordSubscriber {
+    void onLogRecord(LogRecord log);
   }
   
   void open(StorageConfig aConfig, DeviceAndAppConfig aInfo);
@@ -17,8 +17,8 @@ public interface Logger {
   void trace();  
   void error(Throwable error);
   
-  List<Log> queryLog(long sequence, int count);
-  Log deviceAndAppInfoLog();
+  List<LogRecord> queryLogRecord(long sequence, int count);
+  LogRecord deviceAndAppInfoLog();
   long maxSequence();
-  void setSubscriber(LogSubscriber aSubscriber);
+  void setSubscriber(LogRecordSubscriber aSubscriber);
 }
