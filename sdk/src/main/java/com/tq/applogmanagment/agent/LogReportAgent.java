@@ -13,14 +13,18 @@ import io.grpc.stub.StreamObserver;
 import java.util.concurrent.TimeUnit;
 import java.util.List;
 
-public class LogAgent {
+/**
+ * connect to log management node, report logs when requested.
+ */
+public class LogReportAgent {
 
   private final ManagedChannel channel;
   private final LogManagementServiceGrpc.LogManagementServiceStub stub;
-  private static final Logger logger = SimpleLogger.instance();
+  private Logger logger;
   private LogReportSession session;
   
-  public LogAgent(String host, int port) {
+  public LogReportAgent(String host, int port, Logger aLogger) {
+    logger = aLogger;
     channel = ManagedChannelBuilder.forAddress(host, port)
       .usePlaintext()
       .build();
@@ -33,15 +37,9 @@ public class LogAgent {
       .awaitTermination(30, TimeUnit.SECONDS);
   }
 
-  // @Override
-  // public void onLogRecord(LogRecord log) {
-  //   session.reportLog(log);
-  // }
-
   public void start() throws InterruptedException {
-    session = new LogReportSession(this);
+    session = new LogReportSession(this, logger);
     session.setLogOutputStream(stub.reportLog(session));
     session.reportDeviceAndAppInfo();
-//    logger.setSubscriber(this);
   }
 }

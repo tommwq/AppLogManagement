@@ -21,12 +21,13 @@ import static com.tq.applogmanagement.Constant.INVALID_SEQUENCE;
  */
 public class LogReportSession implements StreamObserver<Command> {
 
-  private LogAgent agent;
+  private LogReportAgent agent;
   private StreamObserver<LogRecord> logOutputStream;
-  private static final Logger logger = SimpleLogger.instance();
+  private Logger logger;
   
-  public LogReportSession(LogAgent aAgent) {
+  public LogReportSession(LogReportAgent aAgent, Logger aLogger) {
     agent = aAgent;
+    logger = aLogger;
   }
 
   @Override

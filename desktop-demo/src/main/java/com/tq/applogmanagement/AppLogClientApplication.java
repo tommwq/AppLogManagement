@@ -2,7 +2,7 @@ package com.tq.applogmanagement;
 
 import java.util.Date;
 import java.util.UUID;
-import com.tq.applogmanagement.agent.LogAgent;
+import com.tq.applogmanagement.agent.LogReportAgent;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -32,7 +32,7 @@ public class AppLogClientApplication implements CommandLineRunner {
     logger.open(config, info);
     
     // report device and app info on log report agent start.
-    LogAgent agent = new LogAgent("localhost", 50051);
+    LogReportAgent agent = new LogReportAgent("localhost", 50051, logger);
     agent.start();
 
     // record user defined message

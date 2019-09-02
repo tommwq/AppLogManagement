@@ -1,6 +1,8 @@
 package com.tq.applogmanagement;
 
-import com.tq.applogmanagement.agent.LogAgent;
+import android.util.Log;
+import android.content.Context;
+import com.tq.applogmanagement.agent.LogReportAgent;
 import com.tq.applogmanagement.Logger;
 import com.tq.applogmanagement.SimpleLogger;
 import com.tq.applogmanagement.*;
@@ -10,18 +12,16 @@ import java.util.stream.*;
 import com.tq.applogmanagement.*;
 import com.tq.applogmanagement.AppLogManagementProto.*;
 
-public class Log implements Logger {
+public class AndroidLogger implements Logger {
 
   private Logger delegate = SimpleLogger.instance();
-  private LogAgent agent;
-
-  public Log(String aHost, int aPort) {
-    agent = new LogAgent(aHost, aPort);
+  private LogReportAgent agent;
+  private String tag;
+  
+  public AndroidLogger(String aHost, int aPort, Context context) {
+    agent = new LogReportAgent(aHost, aPort, this);
+    tag = context.getPackageName();
   }
-
-  // public void setSubscriber(LogRecordSubscriber aSubscriber) {
-  //   delegate.setSubscriber(aSubscriber);
-  // }
 
   public void open(StorageConfig aConfig, DeviceAndAppConfig aInfo) {
     delegate.open(aConfig, aInfo);
@@ -37,11 +37,16 @@ public class Log implements Logger {
   }
 
   public void close() {
-    delegate.close();
     try {
-    agent.shutdown();
+      agent.shutdown();
     } catch (Exception e) {
       android.util.Log.e("TEST", "shutdown failed", e);
+    }
+
+    try {
+      delegate.close();
+    } catch (Exception e) {
+
     }
   }
   

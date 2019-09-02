@@ -10,11 +10,11 @@ import android.widget.Button;
 import java.util.UUID;
 import android.app.Activity;
 import android.os.AsyncTask;
-import com.tq.applogmanagement.agent.LogAgent;
+import com.tq.applogmanagement.agent.LogReportAgent;
 import io.grpc.StatusRuntimeException;
 import io.grpc.stub.StreamObserver;
 import java.lang.ref.WeakReference;
-import com.tq.applogmanagement.agent.LogAgent;
+import com.tq.applogmanagement.agent.LogReportAgent;
 import com.tq.applogmanagement.Logger;
 import com.tq.applogmanagement.*;
 
@@ -32,7 +32,6 @@ public class MainActivity extends AppCompatActivity {
     button.setOnClickListener(new OnClickListener() {
         @Override
         public void onClick(View view) {
-          // new MyTask(MainActivity.this).execute();
           logger.print(view, button, MainActivity.this);
         }
       });
@@ -57,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
         .setBlockSize(4096)
         .setBlockCount(8);
     
-      logger = new Log(host, port);
+      logger = new AndroidLogger(host, port, this);
       logger.open(config, info);
 
       // record user defined message
