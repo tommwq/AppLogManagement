@@ -10,7 +10,6 @@ import android.widget.Button;
 import java.util.UUID;
 import android.app.Activity;
 import android.os.AsyncTask;
-import android.util.Log;
 import com.tq.applogmanagement.agent.LogAgent;
 import io.grpc.StatusRuntimeException;
 import io.grpc.stub.StreamObserver;
@@ -51,14 +50,14 @@ public class MainActivity extends AppCompatActivity {
         .setDeviceId(UUID.randomUUID().toString());
 
       String fileName = new File(Environment.getExternalStorageDirectory(), "a.blk").getAbsolutePath();
-      Log.e("AndroidRuntime", fileName);
+      //Log.e("AndroidRuntime", fileName);
       
       StorageConfig config = new StorageConfig()
         .setFileName(fileName)
         .setBlockSize(4096)
         .setBlockCount(8);
     
-      logger = new LoggerWrapper(host, port);
+      logger = new Log(host, port);
       logger.open(config, info);
 
       // record user defined message
@@ -76,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
       // record user defined message
       logger.log("bye");
     } catch (Exception e) {
-      Log.e("TEST", e.getMessage(), e);
+      //Log.e("TEST", e.getMessage(), e);
     }
   }
 }

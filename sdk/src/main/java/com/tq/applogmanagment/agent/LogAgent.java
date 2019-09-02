@@ -13,7 +13,7 @@ import io.grpc.stub.StreamObserver;
 import java.util.concurrent.TimeUnit;
 import java.util.List;
 
-public class LogAgent implements Logger.LogRecordSubscriber {
+public class LogAgent {
 
   private final ManagedChannel channel;
   private final LogManagementServiceGrpc.LogManagementServiceStub stub;
@@ -33,15 +33,15 @@ public class LogAgent implements Logger.LogRecordSubscriber {
       .awaitTermination(30, TimeUnit.SECONDS);
   }
 
-  @Override
-  public void onLogRecord(LogRecord log) {
-    session.reportLog(log);
-  }
+  // @Override
+  // public void onLogRecord(LogRecord log) {
+  //   session.reportLog(log);
+  // }
 
   public void start() throws InterruptedException {
     session = new LogReportSession(this);
     session.setLogOutputStream(stub.reportLog(session));
     session.reportDeviceAndAppInfo();
-    logger.setSubscriber(this);
+//    logger.setSubscriber(this);
   }
 }

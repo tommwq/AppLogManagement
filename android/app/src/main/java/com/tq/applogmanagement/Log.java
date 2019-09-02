@@ -10,18 +10,18 @@ import java.util.stream.*;
 import com.tq.applogmanagement.*;
 import com.tq.applogmanagement.AppLogManagementProto.*;
 
-public class LoggerWrapper implements Logger {
+public class Log implements Logger {
 
   private Logger delegate = SimpleLogger.instance();
   private LogAgent agent;
 
-  public LoggerWrapper(String aHost, int aPort) {
+  public Log(String aHost, int aPort) {
     agent = new LogAgent(aHost, aPort);
   }
 
-  public void setSubscriber(LogRecordSubscriber aSubscriber) {
-    delegate.setSubscriber(aSubscriber);
-  }
+  // public void setSubscriber(LogRecordSubscriber aSubscriber) {
+  //   delegate.setSubscriber(aSubscriber);
+  // }
 
   public void open(StorageConfig aConfig, DeviceAndAppConfig aInfo) {
     delegate.open(aConfig, aInfo);

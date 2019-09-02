@@ -24,7 +24,7 @@ import java.util.concurrent.LinkedTransferQueue;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import com.tq.applogmanagement.Logger.LogRecordSubscriber;
+//import com.tq.applogmanagement.Logger.LogRecordSubscriber;
 import com.tq.applogmanagement.DeviceAndAppConfig;
 
 public class LogUtil {

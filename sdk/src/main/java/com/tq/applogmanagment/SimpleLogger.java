@@ -25,7 +25,7 @@ import java.util.concurrent.LinkedTransferQueue;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import com.tq.applogmanagement.Logger.LogRecordSubscriber;
+
 
 public class SimpleLogger implements Logger {
 
@@ -37,7 +37,7 @@ public class SimpleLogger implements Logger {
   protected Thread backgroundWriteThread = null;
   private LogStorage storage;
   private LogRecord deviceAndAppInfoLog;
-  private LogRecordSubscriber subscriber;
+
   
   private SimpleLogger() {}
 
@@ -57,10 +57,6 @@ public class SimpleLogger implements Logger {
         SimpleLogger.instance().backgroundWriteThread = null;
       }
     }
-  }
-
-  public void setSubscriber(LogRecordSubscriber aSubscriber) {
-    subscriber = aSubscriber;
   }
 
   public static SimpleLogger instance() {
@@ -141,10 +137,6 @@ public class SimpleLogger implements Logger {
     try {
       storage.write(log);
       // TODO test
-      if (subscriber != null) {
-        // System.err.println("post log");
-        subscriber.onLogRecord(log);
-      }
     } catch (IOException e) {
       // TODO 根据策略决定忽略或强制退出进程。
     }
