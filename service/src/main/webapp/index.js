@@ -4,8 +4,7 @@ var app = new Vue({
         deviceIdList: []
     },
     methods: {
-        update: function() {
-            console.log("ok");
+        queryDeviceList: function() {
             axios.get("/api/devices")
                 .then(payload => this.deviceIdList = payload.data)
                 .catch(error => console.log(error));
@@ -13,6 +12,21 @@ var app = new Vue({
     }
 });
 
-app.update();
+app.queryDeviceList();
 
 
+var queryApp = new Vue({
+    el: "#query-app",
+    data: {
+        packageName: "",
+        deviceId: "",
+        logList: []
+    },
+    methods: {
+        query: function() {
+            axios.get("/api/log/" + this.deviceId)
+                .then(payload => this.logList = payload.data)
+                .catch(error => console.log(error));
+        }
+    }
+});

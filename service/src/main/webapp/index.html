@@ -6,12 +6,27 @@
   </head>
   <body>
     <div id="app">
-      <span>Device</span>
+      <p>online device</p>
+      <p v-if="deviceIdList.length == 0">no online device</p>
       <ol>
         <li v-for="deviceId in deviceIdList">
           <a v-bind:href="'log.html?deviceId='+deviceId" target=_blank>
             {{deviceId}}
           </a>
+        </li>
+      </ol>
+    </div>
+
+    <div id="query-app">
+      <span>device id</span> <input v-model="deviceId" /> <br/>
+      <span>package </span> <input v-model="packageName" /> <br/>
+      <button v-on:click="query">query</button>
+      <hr/>
+      <p>device log</p>
+      <p v-if="logList.length == 0">no log</p>
+      <ol>
+        <li v-for="log in logList">
+          {{log}}
         </li>
       </ol>
     </div>

@@ -33,9 +33,6 @@ public class LogManagementServer {
     underlyingServer = ServerBuilder.forPort(port)
       .addService(service)
       .build();
-
-    System.err.println("**** started ****");
-
     underlyingServer.start();
   }
 

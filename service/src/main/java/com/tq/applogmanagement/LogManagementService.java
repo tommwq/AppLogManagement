@@ -24,8 +24,8 @@ public class LogManagementService extends LogManagementServiceGrpc.LogManagement
   
   @Override
   public StreamObserver<Log> reportLog(StreamObserver<Command> outputStream) {
-    System.err.println("report");
-    return new LogSession(outputStream, deviceTable);
+    LogSession session = new LogSession(outputStream, deviceTable);
+    return session;
   }
 
   @Override

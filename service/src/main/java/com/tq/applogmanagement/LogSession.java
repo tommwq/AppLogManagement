@@ -26,10 +26,8 @@ public class LogSession implements StreamObserver<Log> {
       
   @Override
   public void onNext(Log newLog) {
-    System.err.println(newLog.getHeader().toString());
-    
     Any body = newLog.getBody();
-    if (!body.is(DeviceAndAppInfo.class)) {
+    if (body.is(DeviceAndAppInfo.class)) {
       try {
         DeviceAndAppInfo info = body.unpack(DeviceAndAppInfo.class);
         deviceId = info.getDeviceId();
@@ -37,7 +35,7 @@ public class LogSession implements StreamObserver<Log> {
           deviceTable.put(deviceId, this);
         }
       } catch (InvalidProtocolBufferException e) {
-        // ignore
+        e.printStackTrace(System.err);
       }
     }
 
