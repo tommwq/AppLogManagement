@@ -2,6 +2,7 @@ syntax = "proto3";
 
 package com.github.tommwq.applogmanagement;
 
+ option java_multiple_files = false;
 // option java_package = "com.github.tommwq.applogmanagement";
 option java_outer_classname ="AppLogManagementProto";
 
