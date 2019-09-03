@@ -2,45 +2,45 @@ package com.github.tommwq.applogmanagement.http;
 
 public class CommandHttp {
 
-  private String DeviceId;
-  private long Sequence;
-  private int Count;
-  private String PackageName;
-  private boolean IncludeSubPackage;
+  private String deviceId;
+  private long sequence;
+  private int count;
+  private String packageName;
+  private boolean includeSubPackage;
 
   public String getDeviceId() {
-    return DeviceId;
+    return deviceId;
   }
 
   public void setDeviceId(String value) {
-    DeviceId = value;
+    deviceId = value;
   }
   public long getSequence() {
-    return Sequence;
+    return sequence;
   }
 
   public void setSequence(long value) {
-    Sequence = value;
+    sequence = value;
   }
   public int getCount() {
-    return Count;
+    return count;
   }
 
   public void setCount(int value) {
-    Count = value;
+    count = value;
   }
   public String getPackageName() {
-    return PackageName;
+    return packageName;
   }
 
   public void setPackageName(String value) {
-    PackageName = value;
+    packageName = value;
   }
   public boolean getIncludeSubPackage() {
-    return IncludeSubPackage;
+    return includeSubPackage;
   }
 
   public void setIncludeSubPackage(boolean value) {
-    IncludeSubPackage = value;
+    includeSubPackage = value;
   }
 }

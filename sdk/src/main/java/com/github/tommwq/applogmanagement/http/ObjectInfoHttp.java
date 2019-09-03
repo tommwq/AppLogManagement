@@ -1,22 +1,23 @@
 package com.github.tommwq.applogmanagement.http;
 
+@com.fasterxml.jackson.annotation.JsonIgnoreProperties(value = { "hibernateLazyInitializer", "handler" })
 public class ObjectInfoHttp {
 
-  private String ObjectType;
-  private String ObjectValue;
+  private String objectType;
+  private String objectValue;
 
   public String getObjectType() {
-    return ObjectType;
+    return objectType;
   }
 
   public void setObjectType(String value) {
-    ObjectType = value;
+    objectType = value;
   }
   public String getObjectValue() {
-    return ObjectValue;
+    return objectValue;
   }
 
   public void setObjectValue(String value) {
-    ObjectValue = value;
+    objectValue = value;
   }
 }

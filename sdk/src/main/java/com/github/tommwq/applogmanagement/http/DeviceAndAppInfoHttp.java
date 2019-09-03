@@ -1,70 +1,71 @@
 package com.github.tommwq.applogmanagement.http;
 
+@com.fasterxml.jackson.annotation.JsonIgnoreProperties(value = { "hibernateLazyInitializer", "handler" })
 public class DeviceAndAppInfoHttp {
 
-  private String DeviceId;
-  private String DeviceVersion;
-  private String BaseOsName;
-  private String BaseOsVersion;
-  private String OsName;
-  private String OsVersion;
-  private String AppVersion;
-  private java.util.List<com.github.tommwq.applogmanagement.http.ModuleInfoHttp> ModuleInfo;
+  private String deviceId;
+  private String deviceVersion;
+  private String baseOsName;
+  private String baseOsVersion;
+  private String osName;
+  private String osVersion;
+  private String appVersion;
+  private java.util.List<com.github.tommwq.applogmanagement.http.ModuleInfoHttp> moduleInfo;
 
   public String getDeviceId() {
-    return DeviceId;
+    return deviceId;
   }
 
   public void setDeviceId(String value) {
-    DeviceId = value;
+    deviceId = value;
   }
   public String getDeviceVersion() {
-    return DeviceVersion;
+    return deviceVersion;
   }
 
   public void setDeviceVersion(String value) {
-    DeviceVersion = value;
+    deviceVersion = value;
   }
   public String getBaseOsName() {
-    return BaseOsName;
+    return baseOsName;
   }
 
   public void setBaseOsName(String value) {
-    BaseOsName = value;
+    baseOsName = value;
   }
   public String getBaseOsVersion() {
-    return BaseOsVersion;
+    return baseOsVersion;
   }
 
   public void setBaseOsVersion(String value) {
-    BaseOsVersion = value;
+    baseOsVersion = value;
   }
   public String getOsName() {
-    return OsName;
+    return osName;
   }
 
   public void setOsName(String value) {
-    OsName = value;
+    osName = value;
   }
   public String getOsVersion() {
-    return OsVersion;
+    return osVersion;
   }
 
   public void setOsVersion(String value) {
-    OsVersion = value;
+    osVersion = value;
   }
   public String getAppVersion() {
-    return AppVersion;
+    return appVersion;
   }
 
   public void setAppVersion(String value) {
-    AppVersion = value;
+    appVersion = value;
   }
   public java.util.List<com.github.tommwq.applogmanagement.http.ModuleInfoHttp> getModuleInfo() {
-    return ModuleInfo;
+    return moduleInfo;
   }
 
   public void setModuleInfo(java.util.List<com.github.tommwq.applogmanagement.http.ModuleInfoHttp> value) {
-    ModuleInfo = value;
+    moduleInfo = value;
   }
 }

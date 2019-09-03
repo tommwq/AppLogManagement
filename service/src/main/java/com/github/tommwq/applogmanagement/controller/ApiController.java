@@ -1,6 +1,8 @@
 package com.github.tommwq.applogmanagement.controller;
 
 import com.github.tommwq.applogmanagement.AppLogManagementProto.LogRecord;
+import com.github.tommwq.applogmanagement.http.codec.LogRecordCodec;
+import com.github.tommwq.applogmanagement.http.LogRecordHttp;
 import com.github.tommwq.applogmanagement.LogManagementServer;
 import com.github.tommwq.applogmanagement.LogManagementService;
 import java.util.ArrayList;
@@ -34,16 +36,22 @@ public class ApiController {
 
         @RequestMapping(value="/api/log/{deviceId}")
         @ResponseBody
-        public List<String>log(@PathVariable("deviceId") String deviceId) throws Exception {
+        public List<Object>log(@PathVariable("deviceId") String deviceId) throws Exception {
                 LogSession session = server.getService().getLogSession(deviceId);
                 if (session != null) {
                         session.command();
                 }
       
                 LogStorage storage = new Memory();
+                storage.load(deviceId, 0L, 0)
+                        .stream()
+                        .map(LogRecordCodec::toPojo)
+                        .forEach(x -> System.out.println("" + x.getBody()));
+
                 return storage.load(deviceId, 0L, 0)
                         .stream()
-                        .map(log -> log.toString())
+                        .map(LogRecordCodec::toPojo)
+                        .map(x -> x.toString())
                         .collect(Collectors.toList());
         }
 }

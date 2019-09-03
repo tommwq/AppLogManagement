@@ -1,30 +1,31 @@
 package com.github.tommwq.applogmanagement.http;
 
+@com.fasterxml.jackson.annotation.JsonIgnoreProperties(value = { "hibernateLazyInitializer", "handler" })
 public class LogHeaderHttp {
 
-  private long Sequence;
-  private long Time;
-  private int LogType;
+  private long sequence;
+  private long time;
+  private int logType;
 
   public long getSequence() {
-    return Sequence;
+    return sequence;
   }
 
   public void setSequence(long value) {
-    Sequence = value;
+    sequence = value;
   }
   public long getTime() {
-    return Time;
+    return time;
   }
 
   public void setTime(long value) {
-    Time = value;
+    time = value;
   }
   public int getLogType() {
-    return LogType;
+    return logType;
   }
 
   public void setLogType(int value) {
-    LogType = value;
+    logType = value;
   }
 }

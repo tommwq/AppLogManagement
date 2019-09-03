@@ -15,6 +15,7 @@ repositories {
 }
 
 dependencies {
+    compile files("../sdk/build/libs/sdk-0.1.0-SNAPSHOT.jar")
     implementation "org.springframework.boot:spring-boot-devtools"
     implementation 'org.springframework.boot:spring-boot-starter'
     implementation 'org.springframework.boot:spring-boot-starter-web'
@@ -46,7 +47,7 @@ protobuf {
 sourceSets {
     main {
         proto {
-            srcDir '../protocol'
+//            srcDir '../protocol'
         }
     }
 }

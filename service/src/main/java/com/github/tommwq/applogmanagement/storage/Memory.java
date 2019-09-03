@@ -3,11 +3,12 @@ package com.github.tommwq.applogmanagement.storage;
 import com.github.tommwq.applogmanagement.AppLogManagementProto.LogRecord;
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.List;
 
 public class Memory implements LogStorage {
 
-        private static ConcurrentHashMap<String, ArrayList<LogRecord>> table = new ConcurrentHashMap<>();
+        private static ConcurrentHashMap<String, CopyOnWriteArrayList<LogRecord>> table = new ConcurrentHashMap<>();
   
         @Override
         public void save(LogRecord log) {
@@ -15,7 +16,7 @@ public class Memory implements LogStorage {
 
                 String deviceId = "";
                 if (!table.containsKey(deviceId)) {
-                        table.put(deviceId, new ArrayList<>());
+                        table.put(deviceId, new CopyOnWriteArrayList<>());
                 }
 
                 table.get(deviceId).add(log);

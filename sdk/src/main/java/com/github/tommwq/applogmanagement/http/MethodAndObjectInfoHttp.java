@@ -1,22 +1,23 @@
 package com.github.tommwq.applogmanagement.http;
 
+@com.fasterxml.jackson.annotation.JsonIgnoreProperties(value = { "hibernateLazyInitializer", "handler" })
 public class MethodAndObjectInfoHttp {
 
-  private com.github.tommwq.applogmanagement.http.MethodInfoHttp Method;
-  private java.util.List<com.github.tommwq.applogmanagement.http.ObjectInfoHttp> Variable;
+  private com.github.tommwq.applogmanagement.http.MethodInfoHttp method;
+  private java.util.List<com.github.tommwq.applogmanagement.http.ObjectInfoHttp> variable;
 
   public com.github.tommwq.applogmanagement.http.MethodInfoHttp getMethod() {
-    return Method;
+    return method;
   }
 
   public void setMethod(com.github.tommwq.applogmanagement.http.MethodInfoHttp value) {
-    Method = value;
+    method = value;
   }
   public java.util.List<com.github.tommwq.applogmanagement.http.ObjectInfoHttp> getVariable() {
-    return Variable;
+    return variable;
   }
 
   public void setVariable(java.util.List<com.github.tommwq.applogmanagement.http.ObjectInfoHttp> value) {
-    Variable = value;
+    variable = value;
   }
 }

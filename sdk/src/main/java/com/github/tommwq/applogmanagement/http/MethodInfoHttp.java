@@ -1,38 +1,39 @@
 package com.github.tommwq.applogmanagement.http;
 
+@com.fasterxml.jackson.annotation.JsonIgnoreProperties(value = { "hibernateLazyInitializer", "handler" })
 public class MethodInfoHttp {
 
-  private String SourceFile;
-  private int LineNumber;
-  private String ClassName;
-  private String MethodName;
+  private String sourceFile;
+  private int lineNumber;
+  private String className;
+  private String methodName;
 
   public String getSourceFile() {
-    return SourceFile;
+    return sourceFile;
   }
 
   public void setSourceFile(String value) {
-    SourceFile = value;
+    sourceFile = value;
   }
   public int getLineNumber() {
-    return LineNumber;
+    return lineNumber;
   }
 
   public void setLineNumber(int value) {
-    LineNumber = value;
+    lineNumber = value;
   }
   public String getClassName() {
-    return ClassName;
+    return className;
   }
 
   public void setClassName(String value) {
-    ClassName = value;
+    className = value;
   }
   public String getMethodName() {
-    return MethodName;
+    return methodName;
   }
 
   public void setMethodName(String value) {
-    MethodName = value;
+    methodName = value;
   }
 }
