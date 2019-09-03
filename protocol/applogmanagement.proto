@@ -1,8 +1,8 @@
 syntax = "proto3";
 
-package com.tq.applogmanagement;
+package com.github.tommwq.applogmanagement;
 
-option java_package = "com.tq.applogmanagement";
+// option java_package = "com.github.tommwq.applogmanagement";
 option java_outer_classname ="AppLogManagementProto";
 
 import "google/protobuf/any.proto";

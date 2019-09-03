@@ -15,7 +15,7 @@ repositories {
 }
 
 dependencies {
-    compile files("../sdk/build/libs/applogsdk-0.1.0-SNAPSHOT.jar")
+    compile files("../sdk/build/libs/sdk-0.1.0-SNAPSHOT.jar")
     implementation 'org.springframework.boot:spring-boot-starter'
     implementation 'io.grpc:grpc-netty-shaded:1.21.0'
     implementation 'io.grpc:grpc-protobuf:1.21.0'
