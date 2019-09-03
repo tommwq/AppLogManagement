@@ -23,27 +23,27 @@ import com.github.tommwq.applogmanagement.LogSession;
 @RestController
 public class ApiController {
 
-  @Autowired
-  private LogManagementServer server;
+        @Autowired
+        private LogManagementServer server;
 
-  @RequestMapping(value="/api/devices")
-  @ResponseBody
-  public Set<String> device() {
-    return server.getService().getOnlineDeviceIdSet();
-  }
+        @RequestMapping(value="/api/devices")
+        @ResponseBody
+        public Set<String> device() {
+                return server.getService().getOnlineDeviceIdSet();
+        }
 
-  @RequestMapping(value="/api/log/{deviceId}")
-  @ResponseBody
-  public List<String>log(@PathVariable("deviceId") String deviceId) throws Exception {
-    LogSession session = server.getService().getLogSession(deviceId);
-    if (session != null) {
-      session.command();
-    }
+        @RequestMapping(value="/api/log/{deviceId}")
+        @ResponseBody
+        public List<String>log(@PathVariable("deviceId") String deviceId) throws Exception {
+                LogSession session = server.getService().getLogSession(deviceId);
+                if (session != null) {
+                        session.command();
+                }
       
-    LogStorage storage = new Memory();
-    return storage.load(deviceId, 0L, 0)
-      .stream()
-      .map(log -> log.toString())
-      .collect(Collectors.toList());
-  }
+                LogStorage storage = new Memory();
+                return storage.load(deviceId, 0L, 0)
+                        .stream()
+                        .map(log -> log.toString())
+                        .collect(Collectors.toList());
+        }
 }

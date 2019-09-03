@@ -12,27 +12,27 @@ import org.springframework.stereotype.Component;
 @Component
 public class LogManagementService extends LogManagementServiceGrpc.LogManagementServiceImplBase {
 
-  private ConcurrentHashMap<String, LogSession> deviceTable = new ConcurrentHashMap<>();
+        private ConcurrentHashMap<String, LogSession> deviceTable = new ConcurrentHashMap<>();
 
-  public LogSession getLogSession(String deviceId) {
-    return deviceTable.get(deviceId);
-  }
+        public LogSession getLogSession(String deviceId) {
+                return deviceTable.get(deviceId);
+        }
 
-  public Set<String> getOnlineDeviceIdSet() {
-    return deviceTable.keySet();
-  }
+        public Set<String> getOnlineDeviceIdSet() {
+                return deviceTable.keySet();
+        }
   
-  @Override
-  public StreamObserver<LogRecord> reportLog(StreamObserver<Command> outputStream) {
-    LogSession session = new LogSession(outputStream, deviceTable);
-    return session;
-  }
+        @Override
+        public StreamObserver<LogRecord> reportLog(StreamObserver<Command> outputStream) {
+                LogSession session = new LogSession(outputStream, deviceTable);
+                return session;
+        }
 
-  @Override
-  public void queryOnlineDevice(Empty input, StreamObserver<DeviceAndAppInfo> outputStream) {
-  }
+        @Override
+        public void queryOnlineDevice(Empty input, StreamObserver<DeviceAndAppInfo> outputStream) {
+        }
 
-  @Override
-  public void queryLog(Command input, StreamObserver<LogRecord> outputStream) {
-  }
+        @Override
+        public void queryLog(Command input, StreamObserver<LogRecord> outputStream) {
+        }
 }

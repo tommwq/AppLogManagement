@@ -16,29 +16,29 @@ import org.slf4j.LoggerFactory;
 
 @Component
 public class LogManagementServer {
-  private int port = 50051;
-  private Server underlyingServer = null;
-  private LogManagementService service;
+        private int port = 50051;
+        private Server underlyingServer = null;
+        private LogManagementService service;
 
-  public LogManagementService getService() {
-    return service;
-  }
+        public LogManagementService getService() {
+                return service;
+        }
 
-  public int port() {
-    return port;
-  }
+        public int port() {
+                return port;
+        }
 
-  public LogManagementServer() throws Exception {
-    service = new LogManagementService();
-    underlyingServer = ServerBuilder.forPort(port)
-      .addService(service)
-      .build();
-    underlyingServer.start();
-  }
+        public LogManagementServer() throws Exception {
+                service = new LogManagementService();
+                underlyingServer = ServerBuilder.forPort(port)
+                        .addService(service)
+                        .build();
+                underlyingServer.start();
+        }
 
-  public void destroy() {
-    if (underlyingServer != null) {
-      underlyingServer.shutdown();
-    }
-  }
+        public void destroy() {
+                if (underlyingServer != null) {
+                        underlyingServer.shutdown();
+                }
+        }
 }
