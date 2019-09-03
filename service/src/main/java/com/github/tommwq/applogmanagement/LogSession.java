@@ -5,8 +5,8 @@ import com.google.protobuf.InvalidProtocolBufferException;
 import com.github.tommwq.applogmanagement.AppLogManagementProto.LogRecord;
 import com.github.tommwq.applogmanagement.AppLogManagementProto.Command;
 import com.github.tommwq.applogmanagement.AppLogManagementProto.DeviceAndAppInfo;
-import com.github.tommwq.applogmanagement.storage.LogStorage;
-import com.github.tommwq.applogmanagement.storage.Memory;
+import com.github.tommwq.applogmanagement.repository.LogRecordRepository;
+import com.github.tommwq.applogmanagement.repository.MemoryLogRecordRepository;
 import io.grpc.stub.StreamObserver;
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
@@ -17,7 +17,7 @@ public class LogSession implements StreamObserver<LogRecord> {
         private String deviceId = "";
         private ConcurrentHashMap<String, LogSession> deviceTable;
         private StreamObserver<Command> outputStream;
-        private LogStorage storage = new Memory();
+        private LogRecordRepository repository = new MemoryLogRecordRepository();
     
         public LogSession(StreamObserver<Command> aOutputStream, ConcurrentHashMap<String,LogSession> aDeviceTable) {
                 outputStream = aOutputStream;
@@ -39,7 +39,7 @@ public class LogSession implements StreamObserver<LogRecord> {
                         }
                 }
 
-                storage.save(newLog);
+                repository.save(newLog);
         }
     
         @Override

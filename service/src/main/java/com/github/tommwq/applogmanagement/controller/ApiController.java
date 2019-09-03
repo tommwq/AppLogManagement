@@ -17,13 +17,15 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
-import com.github.tommwq.applogmanagement.storage.LogStorage;
-import com.github.tommwq.applogmanagement.storage.Memory;
-
+import com.github.tommwq.applogmanagement.repository.LogRecordRepository;
+import com.github.tommwq.applogmanagement.repository.MemoryLogRecordRepository;
 import com.github.tommwq.applogmanagement.LogSession;
+import java.util.logging.Logger;
 
 @RestController
 public class ApiController {
+
+        private static final Logger logger = Logger.getGlobal();
 
         @Autowired
         private LogManagementServer server;
@@ -42,16 +44,11 @@ public class ApiController {
                         session.command();
                 }
       
-                LogStorage storage = new Memory();
-                storage.load(deviceId, 0L, 0)
+                LogRecordRepository repository = new MemoryLogRecordRepository();
+                        
+                return repository.load(deviceId, 0L, 0)
                         .stream()
                         .map(LogRecordCodec::toPojo)
-                        .forEach(x -> System.out.println("" + x.getBody()));
-
-                return storage.load(deviceId, 0L, 0)
-                        .stream()
-                        .map(LogRecordCodec::toPojo)
-                        .map(x -> x.toString())
                         .collect(Collectors.toList());
         }
 }

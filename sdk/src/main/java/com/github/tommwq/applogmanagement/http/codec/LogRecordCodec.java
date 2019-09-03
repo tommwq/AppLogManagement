@@ -35,13 +35,13 @@ public class LogRecordCodec {
 
                 try {
                         if (body.is(DeviceAndAppInfo.class)) {
-                                pojoBody = body.unpack(DeviceAndAppInfo.class);
+                                pojoBody = DeviceAndAppInfoCodec.toPojo(body.unpack(DeviceAndAppInfo.class));
                         } else if (body.is(ExceptionInfo.class)) {
-                                pojoBody = body.unpack(ExceptionInfo.class);
+                                pojoBody = ExceptionInfoCodec.toPojo(body.unpack(ExceptionInfo.class));
                         } else if (body.is(MethodAndObjectInfo.class)) {
-                                pojoBody = body.unpack(MethodAndObjectInfo.class);
+                                pojoBody = MethodAndObjectInfoCodec.toPojo(body.unpack(MethodAndObjectInfo.class));
                         } else if (body.is(UserDefinedMessage.class)) {
-                                pojoBody = body.unpack(UserDefinedMessage.class);
+                                pojoBody = UserDefinedMessageCodec.toPojo(body.unpack(UserDefinedMessage.class));
                         }
                 } catch (InvalidProtocolBufferException e) {
                         // ignore

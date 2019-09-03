@@ -1,4 +1,4 @@
-package com.github.tommwq.applogmanagement.storage;
+package com.github.tommwq.applogmanagement.repository;
 
 import com.github.tommwq.applogmanagement.AppLogManagementProto.LogRecord;
 import java.util.ArrayList;
@@ -6,7 +6,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.List;
 
-public class Memory implements LogStorage {
+public class MemoryLogRecordRepository implements LogRecordRepository {
 
         private static ConcurrentHashMap<String, CopyOnWriteArrayList<LogRecord>> table = new ConcurrentHashMap<>();
   
