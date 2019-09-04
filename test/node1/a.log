@@ -1,0 +1,132 @@
+2019-09-05 00:20:38.460  INFO 7440 --- [main] c.g.t.a.LogManagementSystemApplication   : Starting LogManagementSystemApplication on DESKTOP-KIMI4UO with PID 7440 (C:\Users\WangQian\Workspace\Project\AppLogManagement\test\node1\applogmanagment-0.0.1-SNAPSHOT.jar started by WangQian in C:\Users\WangQian\Workspace\Project\AppLogManagement\test\node1)
+2019-09-05 00:20:38.482  INFO 7440 --- [main] c.g.t.a.LogManagementSystemApplication   : No active profile set, falling back to default profiles: default
+2019-09-05 00:20:43.270  INFO 7440 --- [main] c.g.t.a.LogManagementSystemApplication   : Started LogManagementSystemApplication in 5.756 seconds (JVM running for 6.622)
+2019-09-05 00:23:56.766  INFO 7920 --- [main] c.g.t.a.LogManagementSystemApplication   : Starting LogManagementSystemApplication on DESKTOP-KIMI4UO with PID 7920 (C:\Users\WangQian\Workspace\Project\AppLogManagement\test\node1\applogmanagment-0.0.1-SNAPSHOT.jar started by WangQian in C:\Users\WangQian\Workspace\Project\AppLogManagement\test\node1)
+2019-09-05 00:23:56.871  INFO 7920 --- [main] c.g.t.a.LogManagementSystemApplication   : No active profile set, falling back to default profiles: default
+2019-09-05 00:24:06.442  INFO 7920 --- [main] c.g.t.a.LogManagementSystemApplication   : Started LogManagementSystemApplication in 10.908 seconds (JVM running for 12.468)
+2019-09-05 00:26:20.960  INFO 10052 --- [main] c.g.t.a.LogManagementSystemApplication   : Starting LogManagementSystemApplication on DESKTOP-KIMI4UO with PID 10052 (C:\Users\WangQian\Workspace\Project\AppLogManagement\test\node1\applogmanagment-0.0.1-SNAPSHOT.jar started by WangQian in C:\Users\WangQian\Workspace\Project\AppLogManagement\test\node1)
+2019-09-05 00:26:20.979  INFO 10052 --- [main] c.g.t.a.LogManagementSystemApplication   : No active profile set, falling back to default profiles: default
+2019-09-05 00:26:30.071  INFO 10052 --- [main] c.g.t.a.LogManagementSystemApplication   : Started LogManagementSystemApplication in 10.333 seconds (JVM running for 11.705)
+2019-09-05 00:26:58.315  INFO 15376 --- [main] c.g.t.a.LogManagementSystemApplication   : Starting LogManagementSystemApplication on DESKTOP-KIMI4UO with PID 15376 (C:\Users\WangQian\Workspace\Project\AppLogManagement\test\node1\applogmanagment-0.0.1-SNAPSHOT.jar started by WangQian in C:\Users\WangQian\Workspace\Project\AppLogManagement\test\node1)
+2019-09-05 00:26:58.405  INFO 15376 --- [main] c.g.t.a.LogManagementSystemApplication   : No active profile set, falling back to default profiles: default
+2019-09-05 00:27:10.239  INFO 15376 --- [main] c.g.t.a.LogManagementSystemApplication   : Started LogManagementSystemApplication in 13.29 seconds (JVM running for 14.891)
+2019-09-05 00:30:22.471  INFO 10172 --- [main] c.g.t.a.LogManagementSystemApplication   : Starting LogManagementSystemApplication on DESKTOP-KIMI4UO with PID 10172 (C:\Users\WangQian\Workspace\Project\AppLogManagement\test\node1\applogmanagment-0.0.1-SNAPSHOT.jar started by WangQian in C:\Users\WangQian\Workspace\Project\AppLogManagement\test\node1)
+2019-09-05 00:30:22.478  INFO 10172 --- [main] c.g.t.a.LogManagementSystemApplication   : No active profile set, falling back to default profiles: default
+2019-09-05 00:30:26.882  INFO 10172 --- [main] c.g.t.a.LogManagementSystemApplication   : Started LogManagementSystemApplication in 5.244 seconds (JVM running for 5.945)
+2019-09-05 00:41:52.143  INFO 18340 --- [main] c.g.t.a.LogManagementSystemApplication   : Starting LogManagementSystemApplication on DESKTOP-KIMI4UO with PID 18340 (C:\Users\WangQian\Workspace\Project\AppLogManagement\test\node1\applogmanagment-0.0.1-SNAPSHOT.jar started by WangQian in C:\Users\WangQian\Workspace\Project\AppLogManagement\test\node1)
+2019-09-05 00:41:52.156  INFO 18340 --- [main] c.g.t.a.LogManagementSystemApplication   : No active profile set, falling back to default profiles: default
+2019-09-05 00:41:58.519  INFO 18340 --- [main] c.g.t.a.LogManagementSystemApplication   : Started LogManagementSystemApplication in 7.182 seconds (JVM running for 7.996)
+2019-09-05 00:55:35.638  INFO 13188 --- [main] c.g.t.a.LogManagementSystemApplication   : Starting LogManagementSystemApplication on DESKTOP-KIMI4UO with PID 13188 (C:\Users\WangQian\Workspace\Project\AppLogManagement\test\node1\applogmanagment-0.0.1-SNAPSHOT.war started by WangQian in C:\Users\WangQian\Workspace\Project\AppLogManagement\test\node1)
+2019-09-05 00:55:35.883  INFO 13188 --- [main] c.g.t.a.LogManagementSystemApplication   : No active profile set, falling back to default profiles: default
+2019-09-05 00:55:52.658  WARN 13188 --- [main] o.s.b.a.f.FreeMarkerAutoConfiguration    : Cannot find template location(s): [classpath:/template] (please add some templates, check your FreeMarker configuration, or set spring.freemarker.checkTemplateLocation=false)
+2019-09-05 00:55:53.374  INFO 13188 --- [main] c.g.t.a.LogManagementSystemApplication   : Started LogManagementSystemApplication in 19.375 seconds (JVM running for 21.141)
+2019-09-05 01:50:23.634  INFO 20084 --- [main] c.g.t.a.LogManagementSystemApplication   : Starting LogManagementSystemApplication on DESKTOP-KIMI4UO with PID 20084 (C:\Users\WangQian\Workspace\Project\AppLogManagement\test\node1\applogmanagment-0.0.1-SNAPSHOT.war started by WangQian in C:\Users\WangQian\Workspace\Project\AppLogManagement\test\node1)
+2019-09-05 01:50:23.727  INFO 20084 --- [main] c.g.t.a.LogManagementSystemApplication   : No active profile set, falling back to default profiles: default
+2019-09-05 01:51:08.882  INFO 14532 --- [main] c.g.t.a.LogManagementSystemApplication   : Starting LogManagementSystemApplication on DESKTOP-KIMI4UO with PID 14532 (C:\Users\WangQian\Workspace\Project\AppLogManagement\test\node1\applogmanagment-0.0.1-SNAPSHOT.war started by WangQian in C:\Users\WangQian\Workspace\Project\AppLogManagement\test\node1)
+2019-09-05 01:51:09.003  INFO 14532 --- [main] c.g.t.a.LogManagementSystemApplication   : No active profile set, falling back to default profiles: default
+2019-09-05 01:51:23.061  WARN 14532 --- [main] o.s.b.a.f.FreeMarkerAutoConfiguration    : Cannot find template location(s): [classpath:/template] (please add some templates, check your FreeMarker configuration, or set spring.freemarker.checkTemplateLocation=false)
+2019-09-05 01:51:23.506  INFO 14532 --- [main] c.g.t.a.LogManagementSystemApplication   : Started LogManagementSystemApplication in 16.533 seconds (JVM running for 18.573)
+2019-09-05 01:55:19.662  INFO 15732 --- [main] c.g.t.a.LogManagementSystemApplication   : Starting LogManagementSystemApplication on DESKTOP-KIMI4UO with PID 15732 (C:\Users\WangQian\Workspace\Project\AppLogManagement\test\node1\applogmanagment-0.0.1-SNAPSHOT.war started by WangQian in C:\Users\WangQian\Workspace\Project\AppLogManagement\test\node1)
+2019-09-05 01:55:19.723  INFO 15732 --- [main] c.g.t.a.LogManagementSystemApplication   : No active profile set, falling back to default profiles: default
+2019-09-05 01:55:33.884  WARN 15732 --- [main] o.s.b.a.f.FreeMarkerAutoConfiguration    : Cannot find template location(s): [classpath:/template] (please add some templates, check your FreeMarker configuration, or set spring.freemarker.checkTemplateLocation=false)
+2019-09-05 01:55:35.096  INFO 15732 --- [main] c.g.t.a.LogManagementSystemApplication   : Started LogManagementSystemApplication in 17.465 seconds (JVM running for 19.578)
+2019-09-05 01:57:21.580  INFO 15732 --- [grpc-nio-worker-ELG-3-8] i.g.n.s.i.g.n.N.connections              : Transport failed
+
+java.io.IOException: 远程主机强迫关闭了一个现有的连接。
+	at sun.nio.ch.SocketDispatcher.read0(Native Method) ~[na:1.8.0_91]
+	at sun.nio.ch.SocketDispatcher.read(SocketDispatcher.java:43) ~[na:1.8.0_91]
+	at sun.nio.ch.IOUtil.readIntoNativeBuffer(IOUtil.java:223) ~[na:1.8.0_91]
+	at sun.nio.ch.IOUtil.read(IOUtil.java:192) ~[na:1.8.0_91]
+	at sun.nio.ch.SocketChannelImpl.read(SocketChannelImpl.java:380) ~[na:1.8.0_91]
+	at io.grpc.netty.shaded.io.netty.buffer.PooledUnsafeDirectByteBuf.setBytes(PooledUnsafeDirectByteBuf.java:288) ~[grpc-netty-shaded-1.21.0.jar!/:1.21.0]
+	at io.grpc.netty.shaded.io.netty.buffer.AbstractByteBuf.writeBytes(AbstractByteBuf.java:1125) ~[grpc-netty-shaded-1.21.0.jar!/:1.21.0]
+	at io.grpc.netty.shaded.io.netty.buffer.WrappedByteBuf.writeBytes(WrappedByteBuf.java:813) ~[grpc-netty-shaded-1.21.0.jar!/:1.21.0]
+	at io.grpc.netty.shaded.io.netty.channel.socket.nio.NioSocketChannel.doReadBytes(NioSocketChannel.java:347) ~[grpc-netty-shaded-1.21.0.jar!/:1.21.0]
+	at io.grpc.netty.shaded.io.netty.channel.nio.AbstractNioByteChannel$NioByteUnsafe.read(AbstractNioByteChannel.java:148) ~[grpc-netty-shaded-1.21.0.jar!/:1.21.0]
+	at io.grpc.netty.shaded.io.netty.channel.nio.NioEventLoop.processSelectedKey(NioEventLoop.java:677) [grpc-netty-shaded-1.21.0.jar!/:1.21.0]
+	at io.grpc.netty.shaded.io.netty.channel.nio.NioEventLoop.processSelectedKeysOptimized(NioEventLoop.java:612) [grpc-netty-shaded-1.21.0.jar!/:1.21.0]
+	at io.grpc.netty.shaded.io.netty.channel.nio.NioEventLoop.processSelectedKeys(NioEventLoop.java:529) [grpc-netty-shaded-1.21.0.jar!/:1.21.0]
+	at io.grpc.netty.shaded.io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:491) [grpc-netty-shaded-1.21.0.jar!/:1.21.0]
+	at io.grpc.netty.shaded.io.netty.util.concurrent.SingleThreadEventExecutor$5.run(SingleThreadEventExecutor.java:905) [grpc-netty-shaded-1.21.0.jar!/:1.21.0]
+	at io.grpc.netty.shaded.io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30) [grpc-netty-shaded-1.21.0.jar!/:1.21.0]
+	at java.lang.Thread.run(Thread.java:745) [na:1.8.0_91]
+
+2019-09-05 01:57:38.704  INFO 7984 --- [main] c.g.t.a.LogManagementSystemApplication   : Starting LogManagementSystemApplication on DESKTOP-KIMI4UO with PID 7984 (C:\Users\WangQian\Workspace\Project\AppLogManagement\test\node1\applogmanagment-0.0.1-SNAPSHOT.war started by WangQian in C:\Users\WangQian\Workspace\Project\AppLogManagement\test\node1)
+2019-09-05 01:57:38.966  INFO 7984 --- [main] c.g.t.a.LogManagementSystemApplication   : No active profile set, falling back to default profiles: default
+2019-09-05 01:57:55.560  WARN 7984 --- [main] o.s.b.a.f.FreeMarkerAutoConfiguration    : Cannot find template location(s): [classpath:/template] (please add some templates, check your FreeMarker configuration, or set spring.freemarker.checkTemplateLocation=false)
+2019-09-05 01:57:56.020  INFO 7984 --- [main] c.g.t.a.LogManagementSystemApplication   : Started LogManagementSystemApplication in 19.15 seconds (JVM running for 20.956)
+2019-09-05 01:59:26.119  INFO 7984 --- [grpc-nio-worker-ELG-3-2] i.g.n.s.i.g.n.N.connections              : Transport failed
+
+java.io.IOException: 远程主机强迫关闭了一个现有的连接。
+	at sun.nio.ch.SocketDispatcher.read0(Native Method) ~[na:1.8.0_91]
+	at sun.nio.ch.SocketDispatcher.read(SocketDispatcher.java:43) ~[na:1.8.0_91]
+	at sun.nio.ch.IOUtil.readIntoNativeBuffer(IOUtil.java:223) ~[na:1.8.0_91]
+	at sun.nio.ch.IOUtil.read(IOUtil.java:192) ~[na:1.8.0_91]
+	at sun.nio.ch.SocketChannelImpl.read(SocketChannelImpl.java:380) ~[na:1.8.0_91]
+	at io.grpc.netty.shaded.io.netty.buffer.PooledUnsafeDirectByteBuf.setBytes(PooledUnsafeDirectByteBuf.java:288) ~[grpc-netty-shaded-1.21.0.jar!/:1.21.0]
+	at io.grpc.netty.shaded.io.netty.buffer.AbstractByteBuf.writeBytes(AbstractByteBuf.java:1125) ~[grpc-netty-shaded-1.21.0.jar!/:1.21.0]
+	at io.grpc.netty.shaded.io.netty.channel.socket.nio.NioSocketChannel.doReadBytes(NioSocketChannel.java:347) ~[grpc-netty-shaded-1.21.0.jar!/:1.21.0]
+	at io.grpc.netty.shaded.io.netty.channel.nio.AbstractNioByteChannel$NioByteUnsafe.read(AbstractNioByteChannel.java:148) ~[grpc-netty-shaded-1.21.0.jar!/:1.21.0]
+	at io.grpc.netty.shaded.io.netty.channel.nio.NioEventLoop.processSelectedKey(NioEventLoop.java:677) [grpc-netty-shaded-1.21.0.jar!/:1.21.0]
+	at io.grpc.netty.shaded.io.netty.channel.nio.NioEventLoop.processSelectedKeysOptimized(NioEventLoop.java:612) [grpc-netty-shaded-1.21.0.jar!/:1.21.0]
+	at io.grpc.netty.shaded.io.netty.channel.nio.NioEventLoop.processSelectedKeys(NioEventLoop.java:529) [grpc-netty-shaded-1.21.0.jar!/:1.21.0]
+	at io.grpc.netty.shaded.io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:491) [grpc-netty-shaded-1.21.0.jar!/:1.21.0]
+	at io.grpc.netty.shaded.io.netty.util.concurrent.SingleThreadEventExecutor$5.run(SingleThreadEventExecutor.java:905) [grpc-netty-shaded-1.21.0.jar!/:1.21.0]
+	at io.grpc.netty.shaded.io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30) [grpc-netty-shaded-1.21.0.jar!/:1.21.0]
+	at java.lang.Thread.run(Thread.java:745) [na:1.8.0_91]
+
+2019-09-05 01:59:45.368  INFO 20068 --- [main] c.g.t.a.LogManagementSystemApplication   : Starting LogManagementSystemApplication on DESKTOP-KIMI4UO with PID 20068 (C:\Users\WangQian\Workspace\Project\AppLogManagement\test\node1\applogmanagment-0.0.1-SNAPSHOT.war started by WangQian in C:\Users\WangQian\Workspace\Project\AppLogManagement\test\node1)
+2019-09-05 01:59:45.453  INFO 20068 --- [main] c.g.t.a.LogManagementSystemApplication   : No active profile set, falling back to default profiles: default
+2019-09-05 02:00:02.659  WARN 20068 --- [main] o.s.b.a.f.FreeMarkerAutoConfiguration    : Cannot find template location(s): [classpath:/template] (please add some templates, check your FreeMarker configuration, or set spring.freemarker.checkTemplateLocation=false)
+2019-09-05 02:00:03.241  INFO 20068 --- [main] c.g.t.a.LogManagementSystemApplication   : Started LogManagementSystemApplication in 19.599 seconds (JVM running for 21.628)
+2019-09-05 02:01:38.597  INFO 20068 --- [grpc-nio-worker-ELG-3-2] i.g.n.s.i.g.n.N.connections              : Transport failed
+
+java.io.IOException: 远程主机强迫关闭了一个现有的连接。
+	at sun.nio.ch.SocketDispatcher.read0(Native Method) ~[na:1.8.0_91]
+	at sun.nio.ch.SocketDispatcher.read(SocketDispatcher.java:43) ~[na:1.8.0_91]
+	at sun.nio.ch.IOUtil.readIntoNativeBuffer(IOUtil.java:223) ~[na:1.8.0_91]
+	at sun.nio.ch.IOUtil.read(IOUtil.java:192) ~[na:1.8.0_91]
+	at sun.nio.ch.SocketChannelImpl.read(SocketChannelImpl.java:380) ~[na:1.8.0_91]
+	at io.grpc.netty.shaded.io.netty.buffer.PooledUnsafeDirectByteBuf.setBytes(PooledUnsafeDirectByteBuf.java:288) ~[grpc-netty-shaded-1.21.0.jar!/:1.21.0]
+	at io.grpc.netty.shaded.io.netty.buffer.AbstractByteBuf.writeBytes(AbstractByteBuf.java:1125) ~[grpc-netty-shaded-1.21.0.jar!/:1.21.0]
+	at io.grpc.netty.shaded.io.netty.channel.socket.nio.NioSocketChannel.doReadBytes(NioSocketChannel.java:347) ~[grpc-netty-shaded-1.21.0.jar!/:1.21.0]
+	at io.grpc.netty.shaded.io.netty.channel.nio.AbstractNioByteChannel$NioByteUnsafe.read(AbstractNioByteChannel.java:148) ~[grpc-netty-shaded-1.21.0.jar!/:1.21.0]
+	at io.grpc.netty.shaded.io.netty.channel.nio.NioEventLoop.processSelectedKey(NioEventLoop.java:677) [grpc-netty-shaded-1.21.0.jar!/:1.21.0]
+	at io.grpc.netty.shaded.io.netty.channel.nio.NioEventLoop.processSelectedKeysOptimized(NioEventLoop.java:612) [grpc-netty-shaded-1.21.0.jar!/:1.21.0]
+	at io.grpc.netty.shaded.io.netty.channel.nio.NioEventLoop.processSelectedKeys(NioEventLoop.java:529) [grpc-netty-shaded-1.21.0.jar!/:1.21.0]
+	at io.grpc.netty.shaded.io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:491) [grpc-netty-shaded-1.21.0.jar!/:1.21.0]
+	at io.grpc.netty.shaded.io.netty.util.concurrent.SingleThreadEventExecutor$5.run(SingleThreadEventExecutor.java:905) [grpc-netty-shaded-1.21.0.jar!/:1.21.0]
+	at io.grpc.netty.shaded.io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30) [grpc-netty-shaded-1.21.0.jar!/:1.21.0]
+	at java.lang.Thread.run(Thread.java:745) [na:1.8.0_91]
+
+2019-09-05 02:01:56.388  INFO 11080 --- [main] c.g.t.a.LogManagementSystemApplication   : Starting LogManagementSystemApplication on DESKTOP-KIMI4UO with PID 11080 (C:\Users\WangQian\Workspace\Project\AppLogManagement\test\node1\applogmanagment-0.0.1-SNAPSHOT.war started by WangQian in C:\Users\WangQian\Workspace\Project\AppLogManagement\test\node1)
+2019-09-05 02:01:56.752  INFO 11080 --- [main] c.g.t.a.LogManagementSystemApplication   : No active profile set, falling back to default profiles: default
+2019-09-05 02:02:13.978  WARN 11080 --- [main] o.s.b.a.f.FreeMarkerAutoConfiguration    : Cannot find template location(s): [classpath:/template] (please add some templates, check your FreeMarker configuration, or set spring.freemarker.checkTemplateLocation=false)
+2019-09-05 02:02:15.252  INFO 11080 --- [main] c.g.t.a.LogManagementSystemApplication   : Started LogManagementSystemApplication in 20.845 seconds (JVM running for 22.499)
+2019-09-05 02:03:55.146  INFO 11080 --- [grpc-nio-worker-ELG-3-2] i.g.n.s.i.g.n.N.connections              : Transport failed
+
+java.io.IOException: 远程主机强迫关闭了一个现有的连接。
+	at sun.nio.ch.SocketDispatcher.read0(Native Method) ~[na:1.8.0_91]
+	at sun.nio.ch.SocketDispatcher.read(SocketDispatcher.java:43) ~[na:1.8.0_91]
+	at sun.nio.ch.IOUtil.readIntoNativeBuffer(IOUtil.java:223) ~[na:1.8.0_91]
+	at sun.nio.ch.IOUtil.read(IOUtil.java:192) ~[na:1.8.0_91]
+	at sun.nio.ch.SocketChannelImpl.read(SocketChannelImpl.java:380) ~[na:1.8.0_91]
+	at io.grpc.netty.shaded.io.netty.buffer.PooledUnsafeDirectByteBuf.setBytes(PooledUnsafeDirectByteBuf.java:288) ~[grpc-netty-shaded-1.21.0.jar!/:1.21.0]
+	at io.grpc.netty.shaded.io.netty.buffer.AbstractByteBuf.writeBytes(AbstractByteBuf.java:1125) ~[grpc-netty-shaded-1.21.0.jar!/:1.21.0]
+	at io.grpc.netty.shaded.io.netty.channel.socket.nio.NioSocketChannel.doReadBytes(NioSocketChannel.java:347) ~[grpc-netty-shaded-1.21.0.jar!/:1.21.0]
+	at io.grpc.netty.shaded.io.netty.channel.nio.AbstractNioByteChannel$NioByteUnsafe.read(AbstractNioByteChannel.java:148) ~[grpc-netty-shaded-1.21.0.jar!/:1.21.0]
+	at io.grpc.netty.shaded.io.netty.channel.nio.NioEventLoop.processSelectedKey(NioEventLoop.java:677) [grpc-netty-shaded-1.21.0.jar!/:1.21.0]
+	at io.grpc.netty.shaded.io.netty.channel.nio.NioEventLoop.processSelectedKeysOptimized(NioEventLoop.java:612) [grpc-netty-shaded-1.21.0.jar!/:1.21.0]
+	at io.grpc.netty.shaded.io.netty.channel.nio.NioEventLoop.processSelectedKeys(NioEventLoop.java:529) [grpc-netty-shaded-1.21.0.jar!/:1.21.0]
+	at io.grpc.netty.shaded.io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:491) [grpc-netty-shaded-1.21.0.jar!/:1.21.0]
+	at io.grpc.netty.shaded.io.netty.util.concurrent.SingleThreadEventExecutor$5.run(SingleThreadEventExecutor.java:905) [grpc-netty-shaded-1.21.0.jar!/:1.21.0]
+	at io.grpc.netty.shaded.io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30) [grpc-netty-shaded-1.21.0.jar!/:1.21.0]
+	at java.lang.Thread.run(Thread.java:745) [na:1.8.0_91]
+
+2019-09-05 02:04:10.070  INFO 11968 --- [main] c.g.t.a.LogManagementSystemApplication   : Starting LogManagementSystemApplication on DESKTOP-KIMI4UO with PID 11968 (C:\Users\WangQian\Workspace\Project\AppLogManagement\test\node1\applogmanagment-0.0.1-SNAPSHOT.war started by WangQian in C:\Users\WangQian\Workspace\Project\AppLogManagement\test\node1)
+2019-09-05 02:04:10.359  INFO 11968 --- [main] c.g.t.a.LogManagementSystemApplication   : No active profile set, falling back to default profiles: default
+2019-09-05 02:04:25.438  WARN 11968 --- [main] o.s.b.a.f.FreeMarkerAutoConfiguration    : Cannot find template location(s): [classpath:/template] (please add some templates, check your FreeMarker configuration, or set spring.freemarker.checkTemplateLocation=false)
+2019-09-05 02:04:26.547  INFO 11968 --- [main] c.g.t.a.LogManagementSystemApplication   : Started LogManagementSystemApplication in 18.099 seconds (JVM running for 20.042)
+2019-09-05 02:06:38.416  INFO 4244 --- [main] c.g.t.a.LogManagementSystemApplication   : Starting LogManagementSystemApplication on DESKTOP-KIMI4UO with PID 4244 (C:\Users\WangQian\Workspace\Project\AppLogManagement\test\node1\applogmanagment-0.0.1-SNAPSHOT.war started by WangQian in C:\Users\WangQian\Workspace\Project\AppLogManagement\test\node1)
+2019-09-05 02:06:38.498  INFO 4244 --- [main] c.g.t.a.LogManagementSystemApplication   : No active profile set, falling back to default profiles: default
+2019-09-05 02:06:53.910  WARN 4244 --- [main] o.s.b.a.f.FreeMarkerAutoConfiguration    : Cannot find template location(s): [classpath:/template] (please add some templates, check your FreeMarker configuration, or set spring.freemarker.checkTemplateLocation=false)

@@ -1,14 +1,24 @@
 package com.github.tommwq.applogmanagement.controller;
 
+import com.github.tommwq.applogmanagement.AppLogManagementProto.Command;
+import com.github.tommwq.applogmanagement.AppLogManagementProto.DeviceAndAppInfo;
 import com.github.tommwq.applogmanagement.AppLogManagementProto.LogRecord;
 import com.github.tommwq.applogmanagement.http.codec.LogRecordCodec;
+import com.github.tommwq.applogmanagement.http.codec.DeviceAndAppInfoCodec;
+import com.github.tommwq.applogmanagement.http.DeviceAndAppInfoHttp;
 import com.github.tommwq.applogmanagement.http.LogRecordHttp;
 import com.github.tommwq.applogmanagement.LogManagementServer;
 import com.github.tommwq.applogmanagement.LogManagementService;
+import com.github.tommwq.applogmanagement.LogManagementServiceGrpc;
+import com.github.tommwq.utility.network.SocketAddressParser;
+import io.grpc.ManagedChannel;
+import io.grpc.ManagedChannelBuilder;
+import io.grpc.stub.StreamObserver;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -35,6 +45,9 @@ public class ApiController {
         @Autowired
         Status status;
 
+        @Value("${peer.address}")
+        String peerAddress;
+
         @RequestMapping(value="/api/devices")
         @ResponseBody
         public Set<String> device() {
@@ -43,13 +56,13 @@ public class ApiController {
 
         @RequestMapping(value="/api/log/{deviceId}")
         @ResponseBody
-        public List<Object>log(@PathVariable("deviceId") String deviceId) throws Exception {
+        public List<LogRecordHttp>log(@PathVariable("deviceId") String deviceId) throws Exception {
                 LogSession session = server.getService().getLogSession(deviceId);
                 if (session != null) {
                         session.command();
                 }
       
-                LogRecordRepository repository = new MemoryLogRecordRepository();
+                LogRecordRepository repository = MemoryLogRecordRepository.instance();
                         
                 return repository.load(deviceId, 0L, 0)
                         .stream()
@@ -63,18 +76,40 @@ public class ApiController {
                 return status;
         }
 
-        public class LookupResult {
-                public boolean exist = false;
-        }
-
         @RequestMapping("/api/lookup/{deviceId}")
         @ResponseBody
-        public LookupResult lookup(@PathVariable("deviceId") String deviceId) {
-                LookupResult result = new LookupResult();
-                result.exist = server.getService()
-                        .getOnlineDeviceIdSet()
-                        .contains(deviceId);
+        public List<DeviceAndAppInfoHttp> lookup(@PathVariable("deviceId") String deviceId) {
+                System.out.println("lookup");
+                Stream<ManagedChannel> channelStream = Stream.of(peerAddress.split(","))
+                        .map(address -> new SocketAddressParser(address))
+                        // TODO 
+                        .filter(x -> x.port() != status.nodePort)
+                        .map(x -> {
+                                        System.out.println(x.address() + x.port());
+                                        return ManagedChannelBuilder.forAddress(x.address(), x.port())
+                                                .usePlaintext()
+                                                .build();
+                                });
 
-                return result;
+                System.out.println("lookup 2");
+
+                List<DeviceAndAppInfoHttp> infoList = channelStream.map(channel -> LogManagementServiceGrpc.newBlockingStub(channel))
+                        .map(stub -> {
+                                        System.out.println("lookup 2.1");
+                                        return stub.queryDeviceInfo(Command.newBuilder()
+                                                                    .setDeviceId(deviceId)
+                                                                    .build());
+                                })
+                        .map(x -> {
+                                        System.out.println("lookup 2.2");
+                                        return DeviceAndAppInfoCodec.toPojo(x);
+                                })
+                        .collect(Collectors.toList());
+
+                System.out.println("lookup 3");
+
+                // TODO
+                // channelStream.forEach(ManagedChannel::shutdown);
+                return infoList;
         }
 }

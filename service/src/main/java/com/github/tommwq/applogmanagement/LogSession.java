@@ -17,7 +17,7 @@ public class LogSession implements StreamObserver<LogRecord> {
         private String deviceId = "";
         private ConcurrentHashMap<String, LogSession> deviceTable;
         private StreamObserver<Command> outputStream;
-        private LogRecordRepository repository = new MemoryLogRecordRepository();
+        private LogRecordRepository repository = MemoryLogRecordRepository.instance();
     
         public LogSession(StreamObserver<Command> aOutputStream, ConcurrentHashMap<String,LogSession> aDeviceTable) {
                 outputStream = aOutputStream;
@@ -26,12 +26,16 @@ public class LogSession implements StreamObserver<LogRecord> {
       
         @Override
         public void onNext(LogRecord newLog) {
+                System.out.println("receive log: " + newLog.toString());
+                          
                 Any body = newLog.getBody();
                 if (body.is(DeviceAndAppInfo.class)) {
                         try {
                                 DeviceAndAppInfo info = body.unpack(DeviceAndAppInfo.class);
                                 deviceId = info.getDeviceId();
                                 if (!deviceTable.containsKey(deviceId)) {
+                                        // TODO
+                                        System.out.println("device connected: " + deviceId);
                                         deviceTable.put(deviceId, this);
                                 }
                         } catch (InvalidProtocolBufferException e) {
