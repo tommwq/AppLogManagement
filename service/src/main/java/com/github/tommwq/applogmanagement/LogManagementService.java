@@ -28,9 +28,9 @@ public class LogManagementService extends LogManagementServiceGrpc.LogManagement
                 return session;
         }
 
-        @Override
-        public void queryOnlineDevice(Empty input, StreamObserver<DeviceAndAppInfo> outputStream) {
-        }
+        // @Override
+        // public void queryDeviceInfo(Empty input, StreamObserver<DeviceAndAppInfo> outputStream) {
+        // }
 
         @Override
         public void queryLog(Command input, StreamObserver<LogRecord> outputStream) {

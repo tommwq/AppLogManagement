@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,6 +31,9 @@ public class ApiController {
 
         @Autowired
         private LogManagementServer server;
+
+        @Autowired
+        Status status;
 
         @RequestMapping(value="/api/devices")
         @ResponseBody
@@ -50,5 +55,26 @@ public class ApiController {
                         .stream()
                         .map(LogRecordCodec::toPojo)
                         .collect(Collectors.toList());
+        }
+        
+        @RequestMapping("/api/status")
+        @ResponseBody
+        public Status status() {
+                return status;
+        }
+
+        public class LookupResult {
+                public boolean exist = false;
+        }
+
+        @RequestMapping("/api/lookup/{deviceId}")
+        @ResponseBody
+        public LookupResult lookup(@PathVariable("deviceId") String deviceId) {
+                LookupResult result = new LookupResult();
+                result.exist = server.getService()
+                        .getOnlineDeviceIdSet()
+                        .contains(deviceId);
+
+                return result;
         }
 }

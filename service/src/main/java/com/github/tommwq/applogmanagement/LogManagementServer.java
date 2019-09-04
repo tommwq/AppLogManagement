@@ -10,13 +10,14 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.stereotype.Component;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.DisposableBean;
-
+import org.springframework.beans.factory.annotation.Value;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @Component
 public class LogManagementServer {
-        private int port = 50051;
+        @Value("${node.port}")
+        private int port;
         private Server underlyingServer = null;
         private LogManagementService service;
 
