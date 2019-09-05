@@ -1,3 +1,6 @@
+Remove-Item -Force node1/*.war
+Remove-Item -Force node2/*.war
+
 Set-Location ../service
 gradle clean bootWar
 

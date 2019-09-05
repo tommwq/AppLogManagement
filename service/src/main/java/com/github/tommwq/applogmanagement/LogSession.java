@@ -43,7 +43,9 @@ public class LogSession implements StreamObserver<LogRecord> {
                         }
                 }
 
-                repository.save(newLog);
+                if (!deviceId.isEmpty()) {
+                        repository.save(deviceId, newLog);
+                }
         }
     
         @Override

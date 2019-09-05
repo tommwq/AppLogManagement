@@ -81,8 +81,10 @@ public class ApiController {
         public List<DeviceAndAppInfoHttp> lookup(@PathVariable("deviceId") String deviceId) {
                 System.out.println("lookup");
                 Stream<ManagedChannel> channelStream = Stream.of(peerAddress.split(","))
-                        .map(address -> new SocketAddressParser(address))
-                        // TODO 
+                        .map(address -> {
+                                        System.out.println(address);
+                                        return new SocketAddressParser(address);
+                                })
                         .filter(x -> x.port() != status.nodePort)
                         .map(x -> {
                                         System.out.println(x.address() + x.port());
@@ -96,9 +98,11 @@ public class ApiController {
                 List<DeviceAndAppInfoHttp> infoList = channelStream.map(channel -> LogManagementServiceGrpc.newBlockingStub(channel))
                         .map(stub -> {
                                         System.out.println("lookup 2.1");
-                                        return stub.queryDeviceInfo(Command.newBuilder()
+                                        DeviceAndAppInfo info =  stub.queryDeviceInfo(Command.newBuilder()
                                                                     .setDeviceId(deviceId)
                                                                     .build());
+                                        System.out.println(info.toString());
+                                        return info;
                                 })
                         .map(x -> {
                                         System.out.println("lookup 2.2");

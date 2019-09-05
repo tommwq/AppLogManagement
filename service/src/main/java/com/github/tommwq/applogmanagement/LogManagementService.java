@@ -54,6 +54,11 @@ public class LogManagementService extends LogManagementServiceGrpc.LogManagement
                         .collect(Collectors.toList());
 
                 System.out.println("queryDeviceInfo 2");
+
+                System.out.println("info list size: " + infoList.size());
+                repository.load(deviceId, 0, 0)
+                        .stream()
+                        .forEach(System.out::println);
                 
                 DeviceAndAppInfo info = null;
                 if (infoList.size() > 0) {
@@ -65,6 +70,9 @@ public class LogManagementService extends LogManagementServiceGrpc.LogManagement
                 System.out.println("queryDeviceInfo 3");
                                 
                 outputStream.onNext(info);
+                outputStream.onCompleted();
+
+                System.out.println("queryDeviceInfo 4");
         }
 
         @Override

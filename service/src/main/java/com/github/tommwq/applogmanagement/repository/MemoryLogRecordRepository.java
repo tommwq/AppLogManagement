@@ -18,10 +18,7 @@ public class MemoryLogRecordRepository implements LogRecordRepository {
         }
         
         @Override
-        public void save(LogRecord log) {
-                // String deviceId = log.getDeviceId();
-
-                String deviceId = "";
+        public void save(String deviceId, LogRecord log) {
                 if (!table.containsKey(deviceId)) {
                         table.put(deviceId, new CopyOnWriteArrayList<>());
                 }
@@ -35,7 +32,6 @@ public class MemoryLogRecordRepository implements LogRecordRepository {
                   return new ArrayList<>();
                 }
 
-                deviceId = "";
                 return table.get(deviceId);
         }
 }
