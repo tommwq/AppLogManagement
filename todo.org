@@ -1,4 +1,5 @@
-多节点相互查询。
 将序号记录到锚块。
 删除test目录下在war、jar。
 去掉queryDeviceInfo中本地port的处理。
+整理代码中的TODO。
+评审设计和代码。

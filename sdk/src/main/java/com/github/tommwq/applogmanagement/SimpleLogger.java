@@ -29,163 +29,166 @@ import java.util.stream.Stream;
 
 public class SimpleLogger implements Logger {
 
-  private static SimpleLogger instance = new SimpleLogger();
+        private static SimpleLogger instance = new SimpleLogger();
 
-  private DeviceAndAppConfig info = new DeviceAndAppConfig();
-  private long sequence = 1;
-  private LinkedTransferQueue<LogRecord> logQueue = new LinkedTransferQueue<>();
-  protected Thread backgroundWriteThread = null;
-  private LogStorage storage;
-  private LogRecord deviceAndAppInfoLog;
-
+        private DeviceAndAppConfig info = new DeviceAndAppConfig();
+        private long sequence = 1;
+        private LinkedTransferQueue<LogRecord> logQueue = new LinkedTransferQueue<>();
+        protected Thread backgroundWriteThread = null;
+        private LogStorage storage;
+        private LogRecord deviceAndAppInfoLog;
   
-  private SimpleLogger() {}
+        private SimpleLogger() {}
 
-  private static class BackgroundWriteRoutine implements Runnable {
-    @Override
-    public void run() {
-      try {
-        while (true) {
-          LogRecord log = instance.logQueue.take();
-          instance.write(log);
+        private static class BackgroundWriteRoutine implements Runnable {
+                @Override
+                public void run() {
+                        try {
+                                while (true) {
+                                        LogRecord log = instance.logQueue.take();
+                                        instance.write(log);
+                                }
+                        } catch (InterruptedException e) {
+                                ArrayList<LogRecord> tails = new ArrayList<>();
+                                tails.addAll(instance.logQueue);
+                                tails.stream().forEach(log -> {try {instance.write(log);} catch (Exception ex){}});
+                        } finally {
+                                SimpleLogger.instance().backgroundWriteThread = null;
+                        }
+                }
         }
-      } catch (InterruptedException e) {
-        ArrayList<LogRecord> tails = new ArrayList<>();
-        tails.addAll(instance.logQueue);
-        tails.stream().forEach(log -> {try {instance.write(log);} catch (Exception ex){}});
-      } finally {
-        SimpleLogger.instance().backgroundWriteThread = null;
-      }
-    }
-  }
 
-  public static SimpleLogger instance() {
-    return instance;
-  }
+        public static SimpleLogger instance() {
+                return instance;
+        }
 
-  public void open(StorageConfig aConfig, DeviceAndAppConfig aInfo) {
-    info = aInfo;
+        public void open(StorageConfig aConfig, DeviceAndAppConfig aInfo) {
+                info = aInfo;
 
-    storage = new LogStorage(new SimpleBlockStorage(Paths.get(aConfig.getFileName()),
-                                                    aConfig.getBlockCount(),
-                                                    aConfig.getBlockSize()));
+                storage = new LogStorage(new SimpleBlockStorage(Paths.get(aConfig.getFileName()),
+                                                                aConfig.getBlockCount(),
+                                                                aConfig.getBlockSize()));
 
-    try {
-      storage.open();
-    } catch (Exception e) {
-      throw new RuntimeException("cannot open storage", e);
-    }
+                try {
+                        storage.open();
+                        sequence = storage.maxSequence();
+                        // TODO
+                        System.out.println("sequence = " + sequence);
+                        
+                } catch (Exception e) {
+                        throw new RuntimeException("cannot open storage", e);
+                }
 
-    Thread.UncaughtExceptionHandler next = Thread.currentThread().getUncaughtExceptionHandler();
-    Thread.currentThread().setUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
-        @Override
-        public void uncaughtException(Thread location, Throwable error) {
-          instance().error(error);
+                Thread.UncaughtExceptionHandler next = Thread.currentThread().getUncaughtExceptionHandler();
+                Thread.currentThread().setUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
+                                @Override
+                                public void uncaughtException(Thread location, Throwable error) {
+                                        instance().error(error);
           
-          if (next != null) {
-            next.uncaughtException(location, error);
-          }
-        }
-      });
+                                        if (next != null) {
+                                                next.uncaughtException(location, error);
+                                        }
+                                }
+                        });
 
-    Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-          instance().close();
-    }));
+                Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+                                        instance().close();
+                }));
     
-    backgroundWriteThread = new Thread(new BackgroundWriteRoutine());
-    backgroundWriteThread.start();
+                backgroundWriteThread = new Thread(new BackgroundWriteRoutine());
+                backgroundWriteThread.start();
 
-    deviceAndAppInfoLog = LogUtil.newDeviceAndAppInfoLog(nextSequence(), info);
-  }
+                deviceAndAppInfoLog = LogUtil.newDeviceAndAppInfoLog(nextSequence(), info);
+        }
 
-  public LogRecord deviceAndAppInfoLog() {
-    return deviceAndAppInfoLog;
-  }
+        public LogRecord deviceAndAppInfoLog() {
+                return deviceAndAppInfoLog;
+        }
 
-  public void close() {
-    if (backgroundWriteThread != null) {
-      backgroundWriteThread.interrupt();
-      try {
-        backgroundWriteThread.join();
-      } catch (InterruptedException e) {
-        // ignore
-      }
-    }
-  }
+        public void close() {
+                if (backgroundWriteThread != null) {
+                        backgroundWriteThread.interrupt();
+                        try {
+                                backgroundWriteThread.join();
+                        } catch (InterruptedException e) {
+                                // ignore
+                        }
+                }
+        }
 
-  private void printLog(LogRecord log, PrintStream printStream) {
-    printStream.print(log.getHeader());
-    Any any = log.getBody();
+        private void printLog(LogRecord log, PrintStream printStream) {
+                printStream.print(log.getHeader());
+                Any any = log.getBody();
 
-    Stream.of(DeviceAndAppInfo.class,
-              ExceptionInfo.class,
-              MethodAndObjectInfo.class,
-              UserDefinedMessage.class)
-      .forEach(clazz -> {
-          if (any.is(clazz)) {
-            try {
-              printStream.print(any.unpack(clazz));
-            } catch (InvalidProtocolBufferException e) {
-              // ignore
-            }
-          }
-        });
-    printStream.println();
-  }
+                Stream.of(DeviceAndAppInfo.class,
+                          ExceptionInfo.class,
+                          MethodAndObjectInfo.class,
+                          UserDefinedMessage.class)
+                        .forEach(clazz -> {
+                                        if (any.is(clazz)) {
+                                                try {
+                                                        printStream.print(any.unpack(clazz));
+                                                } catch (InvalidProtocolBufferException e) {
+                                                        // ignore
+                                                }
+                                        }
+                                });
+                printStream.println();
+        }
 
-  private void write(LogRecord log) {
-    try {
-      storage.write(log);
-      // TODO test
-    } catch (IOException e) {
-      // TODO 根据策略决定忽略或强制退出进程。
-    }
-  }
+        private void write(LogRecord log) {
+                try {
+                        storage.write(log);
+                        // TODO test
+                } catch (IOException e) {
+                        // TODO 根据策略决定忽略或强制退出进程。
+                }
+        }
 
-  private StackTraceElement currentFrame() {
-    StackTraceElement[] stack = new Throwable().getStackTrace();
+        private StackTraceElement currentFrame() {
+                StackTraceElement[] stack = new Throwable().getStackTrace();
 
-    final int stackDepth = 3;
-    if (stack.length < stackDepth) {
-      throw new RuntimeException("cannot get stack information");
-    }
+                final int stackDepth = 3;
+                if (stack.length < stackDepth) {
+                        throw new RuntimeException("cannot get stack information");
+                }
 
-    return stack[stackDepth - 1];
-  }
+                return stack[stackDepth - 1];
+        }
 
-  public void trace() {
-    write(LogUtil.newMethodAndObjectInfoLog(nextSequence(), currentFrame(), new Object[]{}));
-  }
+        public void trace() {
+                write(LogUtil.newMethodAndObjectInfoLog(nextSequence(), currentFrame(), new Object[]{}));
+        }
   
-  public void log(String message, Object... parameters) {
-    String text = String.join(", ", Stream.concat(Stream.of(message), Stream.of(parameters))
-                              .map(x -> x == null ? "null" : x.toString())
-                              .collect(Collectors.toList()));
-    write(LogUtil.newUserDefinedLog(nextSequence(), currentFrame(), text));
-  }
+        public void log(String message, Object... parameters) {
+                String text = String.join(", ", Stream.concat(Stream.of(message), Stream.of(parameters))
+                                          .map(x -> x == null ? "null" : x.toString())
+                                          .collect(Collectors.toList()));
+                write(LogUtil.newUserDefinedLog(nextSequence(), currentFrame(), text));
+        }
 
-  public void print(Object... parameters) {
-    write(LogUtil.newMethodAndObjectInfoLog(nextSequence(), currentFrame(), parameters));
-  }
+        public void print(Object... parameters) {
+                write(LogUtil.newMethodAndObjectInfoLog(nextSequence(), currentFrame(), parameters));
+        }
 
-  public void error(Throwable error) {
-    write(LogUtil.newExceptionInfoLog(nextSequence(), error));
-  }
+        public void error(Throwable error) {
+                write(LogUtil.newExceptionInfoLog(nextSequence(), error));
+        }
 
-  public List<LogRecord> queryLogRecord(long sequence, int count) {
-    return storage.read(sequence, count);
-  }
+        public List<LogRecord> queryLogRecord(long sequence, int count) {
+                return storage.read(sequence, count);
+        }
 
-  public long maxSequence() {
-    return storage.maxSequence();
-  }
+        public long maxSequence() {
+                return storage.maxSequence();
+        }
 
-  // TODO 处理并发。
-  private long nextSequence() {
-    return sequence++;
-  }
+        // TODO 处理并发。
+        private long nextSequence() {
+                return sequence++;
+        }
 
-  private long currentTime() {
-    return System.currentTimeMillis();
-  }  
+        private long currentTime() {
+                return System.currentTimeMillis();
+        }  
 }
