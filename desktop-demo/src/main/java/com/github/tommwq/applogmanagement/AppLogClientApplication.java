@@ -34,6 +34,7 @@ public class AppLogClientApplication implements CommandLineRunner {
     // report device and app info on log report agent start.
     LogReportAgent agent = new LogReportAgent("localhost", 50051, logger);
     agent.start();
+    System.out.println("LogReportAgent started.");
 
     // record user defined message
     logger.log("hello", info, config);

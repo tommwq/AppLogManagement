@@ -18,28 +18,29 @@ import java.util.List;
  */
 public class LogReportAgent {
 
-  private final ManagedChannel channel;
-  private final LogManagementServiceGrpc.LogManagementServiceStub stub;
-  private Logger logger;
-  private LogReportSession session;
+        private final ManagedChannel channel;
+        private final LogManagementServiceGrpc.LogManagementServiceStub stub;
+        private Logger logger;
+        private LogReportSession session;
   
-  public LogReportAgent(String host, int port, Logger aLogger) {
-    logger = aLogger;
-    channel = ManagedChannelBuilder.forAddress(host, port)
-      .usePlaintext()
-      .build();
+        public LogReportAgent(String host, int port, Logger aLogger) {
+                logger = aLogger;
+                channel = ManagedChannelBuilder.forAddress(host, port)
+                        .usePlaintext()
+                        .build();
 
-    stub = LogManagementServiceGrpc.newStub(channel);
-  }
+                stub = LogManagementServiceGrpc.newStub(channel);
+        }
 
-  public void shutdown() throws InterruptedException {
-    channel.shutdown()
-      .awaitTermination(30, TimeUnit.SECONDS);
-  }
+        public void shutdown() throws InterruptedException {
+                channel.shutdown()
+                        .awaitTermination(30, TimeUnit.SECONDS);
+        }
 
-  public void start() throws InterruptedException {
-    session = new LogReportSession(this, logger);
-    session.setLogOutputStream(stub.reportLog(session));
-    session.reportDeviceAndAppInfo();
-  }
+        public void start() throws InterruptedException {
+                System.out.println("log report agent started.");
+                session = new LogReportSession(this, logger);
+                session.setLogOutputStream(stub.reportLog(session));
+                session.reportDeviceAndAppInfo();
+        }
 }

@@ -2,6 +2,7 @@ plugins {
     id 'org.springframework.boot' version '2.1.6.RELEASE'
     id 'java'
     id 'com.google.protobuf' version '0.8.9'
+    id 'war'
 }
 
 apply plugin: 'io.spring.dependency-management'
@@ -12,10 +13,11 @@ sourceCompatibility = '1.8'
 
 repositories {
     mavenCentral()
+    mavenLocal()
 }
 
 dependencies {
-    implementation "com.alibaba:fastjson:1.2.59"
+    implementation 'com.github.tommwq:utility:0.1.0-SNAPSHOT'
     compile files("../sdk/build/libs/sdk-0.1.0-SNAPSHOT.jar")
     implementation "org.springframework.boot:spring-boot-devtools"
     implementation 'org.springframework.boot:spring-boot-starter'
@@ -41,14 +43,6 @@ protobuf {
     generateProtoTasks {
         all()*.plugins {
             grpc {}
-        }
-    }
-}
-
-sourceSets {
-    main {
-        proto {
-//            srcDir '../protocol'
         }
     }
 }
