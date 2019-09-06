@@ -32,3 +32,4 @@ out/
 .vscode/
 
 a.log
+*.db

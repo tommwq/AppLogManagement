@@ -17,11 +17,12 @@ public class LogSession implements StreamObserver<LogRecord> {
         private String deviceId = "";
         private ConcurrentHashMap<String, LogSession> deviceTable;
         private StreamObserver<Command> outputStream;
-        private LogRecordRepository repository = MemoryLogRecordRepository.instance();
+        private LogRecordRepository repository;
     
-        public LogSession(StreamObserver<Command> aOutputStream, ConcurrentHashMap<String,LogSession> aDeviceTable) {
+        public LogSession(StreamObserver<Command> aOutputStream, ConcurrentHashMap<String,LogSession> aDeviceTable, LogRecordRepository aRepository) {
                 outputStream = aOutputStream;
                 deviceTable = aDeviceTable;
+                repository = aRepository;
         }
       
         @Override

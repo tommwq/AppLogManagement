@@ -6,9 +6,11 @@ import com.github.tommwq.applogmanagement.AppLogManagementProto.Empty;
 import com.github.tommwq.applogmanagement.AppLogManagementProto.LogRecord;
 import com.github.tommwq.applogmanagement.AppLogManagementProto.LogType;
 import com.github.tommwq.applogmanagement.repository.LogRecordRepository;
-import com.github.tommwq.applogmanagement.repository.MemoryLogRecordRepository;
+import com.github.tommwq.applogmanagement.repository.SQLiteLogRecordRepository;
 import com.google.protobuf.InvalidProtocolBufferException;
 import io.grpc.stub.StreamObserver;
+import java.io.File;
+import java.sql.SQLException;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.List;
 import java.util.Set;
@@ -19,7 +21,16 @@ import org.springframework.stereotype.Component;
 public class LogManagementService extends LogManagementServiceGrpc.LogManagementServiceImplBase {
 
         private ConcurrentHashMap<String, LogSession> deviceTable = new ConcurrentHashMap<>();
+        private LogRecordRepository repository;
 
+        public LogManagementService() {
+                try {
+                        repository = new SQLiteLogRecordRepository(new File("./log.db"));
+                } catch (SQLException e) {
+                        throw new RuntimeException("fail to open log record repository", e);
+                }
+        }
+        
         public LogSession getLogSession(String deviceId) {
                 return deviceTable.get(deviceId);
         }
@@ -30,7 +41,7 @@ public class LogManagementService extends LogManagementServiceGrpc.LogManagement
   
         @Override
         public StreamObserver<LogRecord> reportLog(StreamObserver<Command> outputStream) {
-                LogSession session = new LogSession(outputStream, deviceTable);
+                LogSession session = new LogSession(outputStream, deviceTable, repository);
                 return session;
         }
 
@@ -38,8 +49,7 @@ public class LogManagementService extends LogManagementServiceGrpc.LogManagement
         public void queryDeviceInfo(Command input, StreamObserver<DeviceAndAppInfo> outputStream) {
                 System.out.println("queryDeviceInfo 1");
                 String deviceId = input.getDeviceId();
-                
-                LogRecordRepository repository = MemoryLogRecordRepository.instance();
+                              
                 List<DeviceAndAppInfo> infoList =  repository.load(deviceId, 0, 0)                
                         .stream()
                         .filter(log -> log.getHeader()
