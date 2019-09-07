@@ -4,7 +4,7 @@ import com.google.protobuf.TextFormat;
 import com.google.protobuf.TextFormat.ParseException;
 import com.github.tommwq.utility.database.DBHelper;
 import com.github.tommwq.utility.database.SQLiteHelper;
-import com.github.tommwq.utility.function.Functions;
+import com.github.tommwq.utility.function.Predicates;
 import com.github.tommwq.utility.Util;
 import com.github.tommwq.applogmanagement.AppLogManagementProto.LogRecord;
 import java.io.ByteArrayInputStream;
@@ -71,7 +71,7 @@ public class SQLiteLogRecordRepository implements LogRecordRepository {
                                                         return null;
                                                 }
                                         })
-                                .filter(Functions::notNull)
+                                .filter(Predicates::notNull)
                                 .collect(Collectors.toList());
                 } catch (SQLException e) {
                         throw new RuntimeException("fail to load log record", e);
