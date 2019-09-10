@@ -52,9 +52,7 @@ public class SQLiteLogRecordRepository implements LogRecordRepository {
         }
 
         private void save(Log log) throws SQLException {
-                try (PreparedStatement pstmt = helper.insertStatement(log, conn)) {
-                        pstmt.executeUpdate();
-                }
+                helper.insert(log);
         }
 
         @Override

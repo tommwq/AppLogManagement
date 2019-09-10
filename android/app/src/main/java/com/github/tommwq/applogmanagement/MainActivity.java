@@ -15,66 +15,68 @@ import io.grpc.StatusRuntimeException;
 import io.grpc.stub.StreamObserver;
 import java.lang.ref.WeakReference;
 import com.github.tommwq.applogmanagement.agent.LogReportAgent;
-import com.github.tommwq.applogmanagement.Logger;
+import com.github.tommwq.applogmanagement.logging.Logger;
 import com.github.tommwq.applogmanagement.*;
+import com.github.tommwq.applogmanagement.storage.*;
+import com.github.tommwq.applogmanagement.storage.SimpleBlockStorage.Config;
 
 public class MainActivity extends AppCompatActivity {
-  private static Logger logger;
+        private static Logger logger;
 
-  @Override
-  protected void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    setContentView(R.layout.activity_main);
-
-    init();
-
-    Button button = (Button) findViewById(R.id.button);
-    button.setOnClickListener(new OnClickListener() {
         @Override
-        public void onClick(View view) {
-          logger.print(view, button, MainActivity.this);
+        protected void onCreate(Bundle savedInstanceState) {
+                super.onCreate(savedInstanceState);
+                setContentView(R.layout.activity_main);
+
+                init();
+
+                Button button = (Button) findViewById(R.id.button);
+                button.setOnClickListener(new OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                        logger.print(view, button, MainActivity.this);
+                                }
+                        });
         }
-      });
-  }
 
-  private void init() {
-    try {
-      String host = "172.24.20.112";
-      host = "192.168.1.105";
-      int port = 50051;
+        private void init() {
+                try {
+                        String host = "172.24.20.112";
+                        host = "192.168.1.105";
+                        int port = 50051;
 
-      DeviceAndAppConfig info = new DeviceAndAppConfig()
-        .setAppVersion("0.1.0")
-        .setModuleVersion("client", "0.1.0")
-        .setDeviceId(UUID.randomUUID().toString());
+                        DeviceAndAppConfig info = new DeviceAndAppConfig()
+                                .setAppVersion("0.1.0")
+                                .setModuleVersion("client", "0.1.0")
+                                .setDeviceId(UUID.randomUUID().toString());
 
-      String fileName = new File(Environment.getExternalStorageDirectory(), "a.blk").getAbsolutePath();
-      //Log.e("AndroidRuntime", fileName);
+                        String fileName = new File(Environment.getExternalStorageDirectory(), "a.blk").getAbsolutePath();
+                        //Log.e("AndroidRuntime", fileName);
       
-      StorageConfig config = new StorageConfig()
-        .setFileName(fileName)
-        .setBlockSize(4096)
-        .setBlockCount(8);
+                        Config config = new Config()
+                                .fileName(fileName)
+                                .blockSize(4096)
+                                .blockCount(8);
     
-      logger = new AndroidLogger(host, port, this);
-      logger.open(config, info);
+                        logger = new AndroidLogger(host, port, this);
+                        logger.open(new SimpleBlockStorage(config), info);
 
-      // record user defined message
-      logger.log("hello", info, config);
+                        // record user defined message
+                        logger.log("hello", info, config);
 
-      // record method and variables
-      logger.trace();
-      int x = 1;
-      logger.print(x);
+                        // record method and variables
+                        logger.trace();
+                        int x = 1;
+                        logger.print(x);
     
-      // record exception
-      Throwable error = new Throwable("Test");
-      logger.error(error);
+                        // record exception
+                        Throwable error = new Throwable("Test");
+                        logger.error(error);
 
-      // record user defined message
-      logger.log("bye");
-    } catch (Exception e) {
-      //Log.e("TEST", e.getMessage(), e);
-    }
-  }
+                        // record user defined message
+                        logger.log("bye");
+                } catch (Exception e) {
+                        //Log.e("TEST", e.getMessage(), e);
+                }
+        }
 }

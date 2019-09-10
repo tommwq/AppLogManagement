@@ -1,5 +1,9 @@
 package com.github.tommwq.applogmanagement;
 
+import com.github.tommwq.applogmanagement.logging.Logger;
+import com.github.tommwq.applogmanagement.logging.SimpleLogger;
+import com.github.tommwq.applogmanagement.storage.SimpleBlockStorage;
+import com.github.tommwq.applogmanagement.storage.SimpleBlockStorage.Config;
 import java.util.Date;
 import java.util.UUID;
 import com.github.tommwq.applogmanagement.agent.LogReportAgent;
@@ -24,12 +28,12 @@ public class AppLogClientApplication implements CommandLineRunner {
                         .setModuleVersion("client", "0.1.0")
                         .setDeviceId(UUID.randomUUID().toString());
 
-                StorageConfig config = new StorageConfig()
-                        .setFileName("a.blk")
-                        .setBlockSize(4096)
-                        .setBlockCount(8);
+                Config config = new Config()
+                        .fileName("a.blk")
+                        .blockSize(4096)
+                        .blockCount(8);
     
-                logger.open(config, info);
+                logger.open(new SimpleBlockStorage(config), info);
 
                 // logger.queryLogRecord(0, 0)
                 //         .stream()
