@@ -1,6 +1,7 @@
-package com.github.tommwq.applogmanagement.storage;
+package com.github.tommwq.applogmanagement.logging;
 
 import com.github.tommwq.applogmanagement.AppLogManagementProto.LogRecord;
+import com.github.tommwq.applogmanagement.storage.BlockStorage;
 import com.google.protobuf.InvalidProtocolBufferException;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -13,7 +14,7 @@ import java.util.stream.Collectors;
 import java.util.zip.Adler32;
 import static com.github.tommwq.applogmanagement.Constant.*;
 
-public class LogStorage implements BlockStorage {
+public class LogRecordStorage implements BlockStorage {
         private static final int MIN_BLOCK_SIZE = 1024;
         private static final int MIN_BLOCK_COUNT = 8;
 
@@ -24,7 +25,7 @@ public class LogStorage implements BlockStorage {
         private int pingBlockNumber;
         private int pongBlockNumber;
 
-        public LogStorage(BlockStorage aStorage) {
+        public LogRecordStorage(BlockStorage aStorage) {
                 storage = aStorage;
                 emptyBlock = new byte[blockSize()];
         }

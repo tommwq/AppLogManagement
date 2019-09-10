@@ -1,4 +1,4 @@
-package com.github.tommwq.applogmanagement;
+package com.github.tommwq.applogmanagement.logging;
 
 import com.google.protobuf.Any;
 import com.google.protobuf.InvalidProtocolBufferException;
@@ -13,10 +13,13 @@ import com.github.tommwq.applogmanagement.AppLogManagementProto.MethodInfo;
 import com.github.tommwq.applogmanagement.AppLogManagementProto.ModuleInfo;
 import com.github.tommwq.applogmanagement.AppLogManagementProto.ObjectInfo;
 import com.github.tommwq.applogmanagement.AppLogManagementProto.UserDefinedMessage;
-import com.github.tommwq.applogmanagement.storage.LogStorage;
+import com.github.tommwq.applogmanagement.logging.LogRecordStorage;
 import com.github.tommwq.applogmanagement.storage.SimpleBlockStorage;
-import com.github.tommwq.applogmanagement.utility.StringUtil;
-import com.github.tommwq.applogmanagement.utility.LogUtil;
+import com.github.tommwq.applogmanagement.logging.LogUtil;
+import com.github.tommwq.applogmanagement.DeviceAndAppConfig;
+import  com.github.tommwq.applogmanagement.storage.SimpleBlockStorage.Config;
+import  com.github.tommwq.applogmanagement.storage.BlockStorage;
+import com.github.tommwq.utility.StringUtil;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.nio.file.Paths;
@@ -26,8 +29,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-
-public class SimpleLogger implements Logger {
+public class SimpleLogger extends Logger {
 
         private static SimpleLogger instance = new SimpleLogger();
 
@@ -35,7 +37,7 @@ public class SimpleLogger implements Logger {
         private long sequence = 1;
         private LinkedTransferQueue<LogRecord> logQueue = new LinkedTransferQueue<>();
         protected Thread backgroundWriteThread = null;
-        private LogStorage storage;
+        private LogRecordStorage storage;
         private LogRecord deviceAndAppInfoLog;
   
         private SimpleLogger() {}
@@ -62,12 +64,10 @@ public class SimpleLogger implements Logger {
                 return instance;
         }
 
-        public void open(StorageConfig aConfig, DeviceAndAppConfig aInfo) {
+        public void open(BlockStorage blockStorage, DeviceAndAppConfig aInfo) {
                 info = aInfo;
 
-                storage = new LogStorage(new SimpleBlockStorage(Paths.get(aConfig.getFileName()),
-                                                                aConfig.getBlockCount(),
-                                                                aConfig.getBlockSize()));
+                storage = new LogRecordStorage(blockStorage);
 
                 try {
                         storage.open();
@@ -136,7 +136,7 @@ public class SimpleLogger implements Logger {
                 printStream.println();
         }
 
-        private void write(LogRecord log) {
+        public void write(LogRecord log) {
                 try {
                         storage.write(log);
                         // TODO test

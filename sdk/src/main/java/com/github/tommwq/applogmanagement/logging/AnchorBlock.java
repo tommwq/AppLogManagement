@@ -1,4 +1,4 @@
-package com.github.tommwq.applogmanagement.storage;
+package com.github.tommwq.applogmanagement.logging;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;

@@ -5,8 +5,8 @@ import com.github.tommwq.applogmanagement.AppLogManagementProto.LogRecord;
 import com.github.tommwq.applogmanagement.AppLogManagementProto.Command;
 import com.github.tommwq.applogmanagement.AppLogManagementProto.ModuleInfo;
 import com.github.tommwq.applogmanagement.LogManagementServiceGrpc;
-import com.github.tommwq.applogmanagement.Logger;
-import com.github.tommwq.applogmanagement.SimpleLogger;
+import com.github.tommwq.applogmanagement.logging.Logger;
+import com.github.tommwq.applogmanagement.logging.SimpleLogger;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import io.grpc.stub.StreamObserver;
@@ -42,9 +42,10 @@ public class LogReportSession implements StreamObserver<Command> {
                         count = sequence < DEFAULT_LOG_COUNT ? (int) sequence : DEFAULT_LOG_COUNT;
                 }
 
-                logger.queryLogRecord(sequence, count)
-                        .stream()
-                        .forEach(log -> logOutputStream.onNext(log));
+                // TODO
+                // logger.queryLogRecord(sequence, count)
+                //         .stream()
+                //         .forEach(log -> logOutputStream.onNext(log));
         }
                 
         @Override
@@ -60,7 +61,8 @@ public class LogReportSession implements StreamObserver<Command> {
 
         public void reportDeviceAndAppInfo() {
                 System.out.println("report device and app info.");
-                logOutputStream.onNext(logger.deviceAndAppInfoLog());
+                // TODO
+                // logOutputStream.onNext(logger.deviceAndAppInfoLog());
         }
 
         public void setLogOutputStream(StreamObserver<LogRecord> aStream) {
