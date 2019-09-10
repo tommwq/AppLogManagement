@@ -20,6 +20,7 @@ import com.github.tommwq.applogmanagement.DeviceAndAppConfig;
 import  com.github.tommwq.applogmanagement.storage.SimpleBlockStorage.Config;
 import  com.github.tommwq.applogmanagement.storage.BlockStorage;
 import com.github.tommwq.utility.StringUtil;
+import com.github.tommwq.utility.function.Call;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.nio.file.Paths;
@@ -31,109 +32,43 @@ import java.util.stream.Stream;
 
 public class SimpleLogger extends Logger {
 
-        private static SimpleLogger instance = new SimpleLogger();
-
-        private DeviceAndAppConfig info = new DeviceAndAppConfig();
+        private DeviceAndAppConfig config = new DeviceAndAppConfig();
         private long sequence = 1;
-        private LinkedTransferQueue<LogRecord> logQueue = new LinkedTransferQueue<>();
-        protected Thread backgroundWriteThread = null;
         private LogRecordStorage storage;
         private LogRecord deviceAndAppInfoLog;
-  
-        private SimpleLogger() {}
-
-        private static class BackgroundWriteRoutine implements Runnable {
-                @Override
-                public void run() {
-                        try {
-                                while (true) {
-                                        LogRecord log = instance.logQueue.take();
-                                        instance.write(log);
-                                }
-                        } catch (InterruptedException e) {
-                                ArrayList<LogRecord> tails = new ArrayList<>();
-                                tails.addAll(instance.logQueue);
-                                tails.stream().forEach(log -> {try {instance.write(log);} catch (Exception ex){}});
-                        } finally {
-                                SimpleLogger.instance().backgroundWriteThread = null;
-                        }
-                }
-        }
-
-        public static SimpleLogger instance() {
-                return instance;
-        }
-
-        public void open(BlockStorage blockStorage, DeviceAndAppConfig aInfo) {
-                info = aInfo;
-
+        private LinkedTransferQueue<LogRecord> logQueue = new LinkedTransferQueue<>();
+        
+        public void open(BlockStorage blockStorage, DeviceAndAppConfig aConfig) {
+                config = aConfig;
                 storage = new LogRecordStorage(blockStorage);
 
-                try {
-                        storage.open();
-                        sequence = storage.maxSequence();
-                        // TODO
-                        System.out.println("sequence = " + sequence);
-                        
-                } catch (Exception e) {
-                        throw new RuntimeException("cannot open storage", e);
-                }
-
-                Thread.UncaughtExceptionHandler next = Thread.currentThread().getUncaughtExceptionHandler();
-                Thread.currentThread().setUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
-                                @Override
-                                public void uncaughtException(Thread location, Throwable error) {
-                                        instance().error(error);
-          
-                                        if (next != null) {
-                                                next.uncaughtException(location, error);
-                                        }
-                                }
-                        });
+                new Call(() -> {
+                                storage.open();
+                                // TODO start background thread
+                });
 
                 Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-                                        instance().close();
+                                        close();
                 }));
+
+                Thread.UncaughtExceptionHandler next = Thread.currentThread().getUncaughtExceptionHandler();
+                Thread.currentThread().setUncaughtExceptionHandler(
+                        (thread, error) -> {
+                                // TODO log
+                                if (next != null) {
+                                        next.uncaughtException(thread, error);
+                                }
+                        });
     
-                backgroundWriteThread = new Thread(new BackgroundWriteRoutine());
-                backgroundWriteThread.start();
-
-                deviceAndAppInfoLog = LogUtil.newDeviceAndAppInfoLog(nextSequence(), info);
+                deviceAndAppInfoLog = LogUtil.newDeviceAndAppInfoLog(nextSequence(), config);
         }
 
-        public LogRecord deviceAndAppInfoLog() {
-                return deviceAndAppInfoLog;
-        }
+        // public LogRecord deviceAndAppInfoLog() {
+        //         return deviceAndAppInfoLog;
+        // }
 
         public void close() {
-                if (backgroundWriteThread != null) {
-                        backgroundWriteThread.interrupt();
-                        try {
-                                backgroundWriteThread.join();
-                        } catch (InterruptedException e) {
-                                // ignore
-                        }
-                }
-        }
-
-        private void printLog(LogRecord log, PrintStream printStream) {
-                printStream.print(log.getHeader());
-                Any any = log.getBody();
-
-                Stream.of(DeviceAndAppInfo.class,
-                          ExceptionInfo.class,
-                          MethodAndObjectInfo.class,
-                          UserDefinedMessage.class)
-                        .forEach(clazz -> {
-                                        if (any.is(clazz)) {
-                                                try {
-                                                        printStream.print(any.unpack(clazz));
-                                                } catch (InvalidProtocolBufferException e) {
-                                                        // ignore
-                                                }
-                                        }
-                                });
-                printStream.println();
+                // TODO flush
         }
 
         public void write(LogRecord log) {
@@ -190,5 +125,13 @@ public class SimpleLogger extends Logger {
 
         private long currentTime() {
                 return System.currentTimeMillis();
-        }  
+        }
+
+        public List<LogRecord> readAll() {
+                return null;
+        }
+
+        public LogRecord read() {
+                return null;
+        }
 }

@@ -36,7 +36,8 @@ public class LogReportSession implements StreamObserver<Command> {
                 int count = command.getCount();
 
                 if (sequence == INVALID_SEQUENCE) {
-                        sequence = SimpleLogger.instance().maxSequence();
+                        // TODO
+                        // sequence = SimpleLogger.instance().maxSequence();
                 }
                 if (count == INVALID_COUNT) {
                         count = sequence < DEFAULT_LOG_COUNT ? (int) sequence : DEFAULT_LOG_COUNT;

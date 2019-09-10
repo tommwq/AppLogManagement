@@ -119,4 +119,25 @@ public class LogUtil {
                                           .build()))
                         .build();
         }
+
+        public static void printLog(LogRecord log, PrintStream printStream) {
+                printStream.print(log.getHeader());
+                Any any = log.getBody();
+
+                Stream.of(DeviceAndAppInfo.class,
+                          ExceptionInfo.class,
+                          MethodAndObjectInfo.class,
+                          UserDefinedMessage.class)
+                        .forEach(clazz -> {
+                                        if (any.is(clazz)) {
+                                                try {
+                                                        printStream.print(any.unpack(clazz));
+                                                } catch (InvalidProtocolBufferException e) {
+                                                        // ignore
+                                                }
+                                        }
+                                });
+                printStream.println();
+        }
+
 }
