@@ -5,6 +5,7 @@ import android.content.Context;
 import com.github.tommwq.applogmanagement.agent.LogReportAgent;
 import com.github.tommwq.applogmanagement.logging.Logger;
 import com.github.tommwq.applogmanagement.logging.SimpleLogger;
+import com.github.tommwq.applogmanagement.logging.LogRecordReader;
 import com.github.tommwq.applogmanagement.*;
 import com.github.tommwq.applogmanagement.storage.*;
 import com.github.tommwq.applogmanagement.storage.SimpleBlockStorage.Config;
@@ -16,7 +17,7 @@ import com.github.tommwq.applogmanagement.AppLogManagementProto.*;
 
 public class AndroidLogger extends Logger {
 
-        private Logger delegate = SimpleLogger.instance();
+        private Logger delegate = new SimpleLogger();
         private LogReportAgent agent;
         private String tag;
 
@@ -38,11 +39,6 @@ public class AndroidLogger extends Logger {
                 }
         }
   
-        public LogRecord deviceAndAppInfoLog() {
-                // return delegate.deviceAndAppInfoLog();
-                return null;
-        }
-
         public void close() {
                 try {
                         agent.shutdown();
@@ -81,6 +77,40 @@ public class AndroidLogger extends Logger {
                 // return delegate.maxSequence();
                 return 0;
         }  
+
+
+        public List<LogRecord> readAll() {
+                return delegate.readAll();
+        }
+
+        public LogRecord read() {
+                return delegate.read();
+        }
+
+        public long maxLsn() {
+                return delegate.maxLsn();
+        }
+
+        public long minLsn() {
+                return delegate.minLsn();
+        }
+        
+        public LogRecordReader moveTo(long sequence) {
+                return delegate.moveTo(sequence);
+        }
+
+        public LogRecord read(long sequence) {
+                return delegate.read(sequence);
+        }
+        
+        public List<LogRecord> read(long sequence, int count) {
+                return delegate.read(sequence, count);
+        }
+
+        public LogRecord deviceAndAppInfoLog() {
+                return delegate.deviceAndAppInfoLog();
+        }
+
 }
 
 

@@ -22,12 +22,19 @@ import static com.github.tommwq.applogmanagement.Constant.INVALID_SEQUENCE;
 public class LogReportSession implements StreamObserver<Command> {
 
         private LogReportAgent agent;
-        private StreamObserver<LogRecord> logOutputStream;
+        private StreamObserver<LogRecord> outputStream;
         private Logger logger;
-  
-        public LogReportSession(LogReportAgent aAgent, Logger aLogger) {
+        private LogManagementServiceGrpc.LogManagementServiceStub stub;
+        private boolean connected = false;
+        
+        public LogReportSession(LogReportAgent aAgent,
+                                Logger aLogger,
+                                LogManagementServiceGrpc.LogManagementServiceStub aStub) {
                 agent = aAgent;
                 logger = aLogger;
+                stub = aStub;
+
+                connect();
         }
 
         @Override
@@ -36,42 +43,59 @@ public class LogReportSession implements StreamObserver<Command> {
                 int count = command.getCount();
 
                 if (sequence == INVALID_SEQUENCE) {
-                        // TODO
-                        // sequence = SimpleLogger.instance().maxSequence();
+                        sequence = logger.maxLsn();
                 }
                 if (count == INVALID_COUNT) {
                         count = sequence < DEFAULT_LOG_COUNT ? (int) sequence : DEFAULT_LOG_COUNT;
                 }
 
-                // TODO
-                // logger.queryLogRecord(sequence, count)
-                //         .stream()
-                //         .forEach(log -> logOutputStream.onNext(log));
+                logger.read(sequence, count)
+                        .stream()
+                        .forEach(log -> outputStream.onNext(log));
         }
                 
         @Override
         public void onError(Throwable error) {
-                System.out.println(error.toString());          
-                // TODO 重写重连机制。
+                System.err.println(error.toString());
+                connect();
         }
                 
         @Override
-        public void onCompleted() {          
-                // TODO 通知agent。
+        public void onCompleted() {
+                connect();
+        }
+
+        private void connect() {
+                int[] backoff = new int[]{ 4, 8, 16, 32, 64, 128 };
+                connected = false;
+                int retry = 0;
+
+                while (!connected) {
+                        reconnect();
+                        try {
+                                long time = 1000 * (retry < backoff.length ? backoff[retry] : backoff[backoff.length-1]);
+                                Thread.sleep(time);
+                        } catch (InterruptedException e) {
+                                break;
+                        }
+                        retry++;
+                }
+        }
+
+        private void reconnect() {
+                new Thread(() -> {
+                                outputStream = stub.reportLog(this);
+                                reportDeviceAndAppInfo();
+                                connected = true;
+                }).start();
         }
 
         public void reportDeviceAndAppInfo() {
-                System.out.println("report device and app info.");
-                // TODO
-                // logOutputStream.onNext(logger.deviceAndAppInfoLog());
-        }
-
-        public void setLogOutputStream(StreamObserver<LogRecord> aStream) {
-                logOutputStream = aStream;
+                outputStream.onNext(logger.deviceAndAppInfoLog());
         }
 
         public void reportLog(LogRecord log) {
-                logOutputStream.onNext(log);
+                outputStream.onNext(log);
         }
 }
 

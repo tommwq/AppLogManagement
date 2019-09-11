@@ -46,7 +46,6 @@ public class SQLiteDeviceLogManagementService implements DeviceLogManagementServ
                 }
         }
 
-        // TODO put to SQLiteUtil
         private boolean isTableExist(Connection connection, String tableName) {
                 String sqlFormat = "select count(*) as exist from sqlite_master where type='table' and name='%s'";
                 String sql = sqlFormat.format(tableName);
@@ -64,7 +63,6 @@ public class SQLiteDeviceLogManagementService implements DeviceLogManagementServ
                 }
         }
 
-        // TODO put to SQLiteUtil
         private void createTable(Connection connection, String createTableSQL) {
                 try {
                         Statement statement = connection.createStatement();
@@ -74,7 +72,6 @@ public class SQLiteDeviceLogManagementService implements DeviceLogManagementServ
                 }
         }
 
-        // TODO put to SQLiteUtil
         private void createTableInNeed(Connection connection, String tableName, String createTableSQL) {
                 if (!isTableExist(connection, tableName)) {
                         createTable(connection, createTableSQL);

@@ -121,8 +121,7 @@ public class ApiController implements InitializingBean {
 
                 System.out.println("lookup 3");
 
-                // TODO
-                // channelStream.forEach(ManagedChannel::shutdown);
+                channelStream.forEach(ManagedChannel::shutdown);
                 return infoList;
         }
 }

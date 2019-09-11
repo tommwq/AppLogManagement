@@ -21,6 +21,8 @@ import  com.github.tommwq.applogmanagement.storage.SimpleBlockStorage.Config;
 import  com.github.tommwq.applogmanagement.storage.BlockStorage;
 import com.github.tommwq.utility.StringUtil;
 import com.github.tommwq.utility.function.Call;
+import com.github.tommwq.utility.ThreadUtil;
+import com.github.tommwq.utility.Util;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.nio.file.Paths;
@@ -33,10 +35,13 @@ import java.util.stream.Stream;
 public class SimpleLogger extends Logger {
 
         private DeviceAndAppConfig config = new DeviceAndAppConfig();
-        private long sequence = 1;
         private LogRecordStorage storage;
+        private LinkedTransferQueue<LogRecord> queue = new LinkedTransferQueue<>();
+        private boolean closed = true;
         private LogRecord deviceAndAppInfoLog;
-        private LinkedTransferQueue<LogRecord> logQueue = new LinkedTransferQueue<>();
+        private FlushThread flushThread = null;
+        private long maxLsn = 0;
+        private long minLsn = 0;
         
         public void open(BlockStorage blockStorage, DeviceAndAppConfig aConfig) {
                 config = aConfig;
@@ -44,94 +49,102 @@ public class SimpleLogger extends Logger {
 
                 new Call(() -> {
                                 storage.open();
-                                // TODO start background thread
-                });
+                                flushThread = new FlushThread(queue, storage);
+                                flushThread.start();
+                                closed = false;
+                                maxLsn = storage.maxSequence();
+                                minLsn = 0;
+                }).rethrow();
 
-                Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-                                        close();
-                }));
+                Runtime.getRuntime().addShutdownHook(new Thread(() -> close()));
 
                 Thread.UncaughtExceptionHandler next = Thread.currentThread().getUncaughtExceptionHandler();
                 Thread.currentThread().setUncaughtExceptionHandler(
                         (thread, error) -> {
-                                // TODO log
+                                close();
                                 if (next != null) {
                                         next.uncaughtException(thread, error);
                                 }
                         });
     
-                deviceAndAppInfoLog = LogUtil.newDeviceAndAppInfoLog(nextSequence(), config);
+                deviceAndAppInfoLog = LogUtil.newDeviceAndAppInfoLog(nextLsn(), config);
+                write(deviceAndAppInfoLog);
         }
-
-        // public LogRecord deviceAndAppInfoLog() {
-        //         return deviceAndAppInfoLog;
-        // }
-
+    
         public void close() {
-                // TODO flush
+                closed = true;
+                if (flushThread != null) {
+                        queue.offer(FlushThread.END_OF_QUEUE);
+                        ThreadUtil.john(flushThread);
+                        flushThread = null;
+                }
         }
 
         public void write(LogRecord log) {
-                try {
-                        storage.write(log);
-                        // TODO test
-                } catch (IOException e) {
-                        // TODO 根据策略决定忽略或强制退出进程。
-                }
-        }
-
-        private StackTraceElement currentFrame() {
-                StackTraceElement[] stack = new Throwable().getStackTrace();
-
-                final int stackDepth = 3;
-                if (stack.length < stackDepth) {
-                        throw new RuntimeException("cannot get stack information");
+                if (closed) {
+                        return;
                 }
 
-                return stack[stackDepth - 1];
+                queue.offer(log);
         }
 
         public void trace() {
-                write(LogUtil.newMethodAndObjectInfoLog(nextSequence(), currentFrame(), new Object[]{}));
+                write(LogUtil.newMethodAndObjectInfoLog(nextLsn(), Util.currentFrame(3), new Object[]{}));
         }
   
         public void log(String message, Object... parameters) {
                 String text = String.join(", ", Stream.concat(Stream.of(message), Stream.of(parameters))
                                           .map(x -> x == null ? "null" : x.toString())
                                           .collect(Collectors.toList()));
-                write(LogUtil.newUserDefinedLog(nextSequence(), currentFrame(), text));
+                write(LogUtil.newUserDefinedLog(nextLsn(), Util.currentFrame(3), text));
         }
 
         public void print(Object... parameters) {
-                write(LogUtil.newMethodAndObjectInfoLog(nextSequence(), currentFrame(), parameters));
+                write(LogUtil.newMethodAndObjectInfoLog(nextLsn(), Util.currentFrame(3), parameters));
         }
 
         public void error(Throwable error) {
-                write(LogUtil.newExceptionInfoLog(nextSequence(), error));
+                write(LogUtil.newExceptionInfoLog(nextLsn(), error));
         }
 
-        public List<LogRecord> queryLogRecord(long sequence, int count) {
-                return storage.read(sequence, count);
-        }
-
-        public long maxSequence() {
-                return storage.maxSequence();
-        }
-
-        // TODO 处理并发。
-        private long nextSequence() {
-                return sequence++;
-        }
-
-        private long currentTime() {
-                return System.currentTimeMillis();
+        private synchronized long nextLsn() {
+                return maxLsn++;
         }
 
         public List<LogRecord> readAll() {
-                return null;
+                return storage.read(maxLsn(), (int) maxLsn());
         }
 
         public LogRecord read() {
-                return null;
+                return read(maxLsn() - 1);
+        }
+
+        public long maxLsn() {
+                return maxLsn;
+        }
+
+        public long minLsn() {
+                return minLsn;
+        }
+        
+        public LogRecordReader moveTo(long sequence) {
+                return this;
+        }
+
+        public LogRecord read(long sequence) {
+                List<LogRecord> list = storage.read(sequence, 1);
+                if (list.isEmpty()) {
+                        return null;
+                }
+
+                return list.get(0);
+        }
+        
+        public List<LogRecord> read(long sequence, int count) {
+                return storage.read(sequence, count);
+        }
+
+        public LogRecord deviceAndAppInfoLog() {
+                return deviceAndAppInfoLog;
         }
 }

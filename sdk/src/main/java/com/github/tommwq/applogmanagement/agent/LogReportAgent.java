@@ -38,9 +38,6 @@ public class LogReportAgent {
         }
 
         public void start() throws InterruptedException {
-                System.out.println("log report agent started.");
-                session = new LogReportSession(this, logger);
-                session.setLogOutputStream(stub.reportLog(session));
-                session.reportDeviceAndAppInfo();
+                session = new LogReportSession(this, logger, stub);
         }
 }

@@ -35,8 +35,6 @@ public class LogSession implements StreamObserver<LogRecord> {
                                 DeviceAndAppInfo info = body.unpack(DeviceAndAppInfo.class);
                                 deviceId = info.getDeviceId();
                                 if (!deviceTable.containsKey(deviceId)) {
-                                        // TODO
-                                        System.out.println("device connected: " + deviceId);
                                         deviceTable.put(deviceId, this);
                                 }
                         } catch (InvalidProtocolBufferException e) {

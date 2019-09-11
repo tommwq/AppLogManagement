@@ -14,7 +14,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class AppLogClientApplication implements CommandLineRunner {
 
-        private static final Logger logger = SimpleLogger.instance();
+        private static final Logger logger = new SimpleLogger();
 
         public static void main(String[] args) throws Exception {    
                 SpringApplication.run(AppLogClientApplication.class, args);
@@ -34,10 +34,6 @@ public class AppLogClientApplication implements CommandLineRunner {
                         .blockCount(8);
     
                 logger.open(new SimpleBlockStorage(config), info);
-
-                // logger.queryLogRecord(0, 0)
-                //         .stream()
-                //         .forEach(x -> System.out.println(x.getHeader().toString()));
     
                 // report device and app info on log report agent start.
                 LogReportAgent agent = new LogReportAgent("localhost", 50051, logger);
@@ -57,12 +53,12 @@ public class AppLogClientApplication implements CommandLineRunner {
                 logger.error(error);
 
                 // record user defined message
-                while (true) {
-                        Thread.sleep(3 * 60 * 1000);
-                        // logger.print(new Date());
-                }
+                // while (true) {
+                //         Thread.sleep(3 * 60 * 1000);
+                //         // logger.print(new Date());
+                // }
 
                 // agent.shutdown();
-                // logger.close();
+                logger.close();
         }
 }
