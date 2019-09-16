@@ -53,12 +53,13 @@ public class AppLogClientApplication implements CommandLineRunner {
                 logger.error(error);
 
                 // record user defined message
-                // while (true) {
-                //         Thread.sleep(3 * 60 * 1000);
-                //         // logger.print(new Date());
-                // }
+                while (true) {
+                        Thread.sleep(3 * 60 * 1000);
+                        // logger.print(new Date());
+                }
 
+                // logger.close();
+                // System.out.println("logger closed");
                 // agent.shutdown();
-                logger.close();
         }
 }

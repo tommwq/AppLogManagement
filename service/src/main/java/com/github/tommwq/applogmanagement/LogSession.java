@@ -19,7 +19,10 @@ public class LogSession implements StreamObserver<LogRecord> {
         private StreamObserver<Command> outputStream;
         private LogRecordRepository repository;
     
-        public LogSession(StreamObserver<Command> aOutputStream, ConcurrentHashMap<String,LogSession> aDeviceTable, LogRecordRepository aRepository) {
+        public LogSession(StreamObserver<Command> aOutputStream,
+                          ConcurrentHashMap<String,LogSession> aDeviceTable,
+                          LogRecordRepository aRepository) {
+                
                 outputStream = aOutputStream;
                 deviceTable = aDeviceTable;
                 repository = aRepository;
@@ -27,7 +30,6 @@ public class LogSession implements StreamObserver<LogRecord> {
       
         @Override
         public void onNext(LogRecord newLog) {
-                System.out.println("receive log: " + newLog.toString());
                           
                 Any body = newLog.getBody();
                 if (body.is(DeviceAndAppInfo.class)) {
@@ -54,8 +56,8 @@ public class LogSession implements StreamObserver<LogRecord> {
     
         @Override
         public void onCompleted() {
-                deviceTable.remove(deviceId);
                 outputStream.onCompleted();
+                deviceTable.remove(deviceId);
         }
 
         public void command() {

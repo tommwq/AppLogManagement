@@ -21,7 +21,7 @@ public class LogReportAgent {
         private final ManagedChannel channel;
         private final LogManagementServiceGrpc.LogManagementServiceStub stub;
         private Logger logger;
-        private LogReportSession session;
+        private LogReportSession session = null;
   
         public LogReportAgent(String host, int port, Logger aLogger) {
                 logger = aLogger;
@@ -33,8 +33,11 @@ public class LogReportAgent {
         }
 
         public void shutdown() throws InterruptedException {
-                channel.shutdown()
-                        .awaitTermination(30, TimeUnit.SECONDS);
+                if (session != null) {
+                        session.shutdown();
+                }
+                
+                channel.shutdown().awaitTermination(30, TimeUnit.SECONDS);
         }
 
         public void start() throws InterruptedException {

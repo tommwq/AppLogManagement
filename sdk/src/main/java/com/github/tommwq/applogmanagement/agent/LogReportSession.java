@@ -9,6 +9,7 @@ import com.github.tommwq.applogmanagement.logging.Logger;
 import com.github.tommwq.applogmanagement.logging.SimpleLogger;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
+import io.grpc.StatusRuntimeException;
 import io.grpc.stub.StreamObserver;
 import java.util.concurrent.TimeUnit;
 import java.util.List;
@@ -21,11 +22,16 @@ import static com.github.tommwq.applogmanagement.Constant.INVALID_SEQUENCE;
  */
 public class LogReportSession implements StreamObserver<Command> {
 
+        private static enum ConnectStatus {
+                Disconnected, Connected, Connecting;
+        }
+
         private LogReportAgent agent;
-        private StreamObserver<LogRecord> outputStream;
+        private StreamObserver<LogRecord> outputStream = null;
         private Logger logger;
         private LogManagementServiceGrpc.LogManagementServiceStub stub;
-        private boolean connected = false;
+        private ConnectStatus connectStatus = ConnectStatus.Disconnected;
+        private boolean quit = false;
         
         public LogReportSession(LogReportAgent aAgent,
                                 Logger aLogger,
@@ -39,6 +45,10 @@ public class LogReportSession implements StreamObserver<Command> {
 
         @Override
         public void onNext(Command command) {
+                if (connectStatus != ConnectStatus.Connected) {
+                        connectStatus = ConnectStatus.Connected;
+                }
+                
                 long sequence = command.getSequence();
                 int count = command.getCount();
 
@@ -56,21 +66,37 @@ public class LogReportSession implements StreamObserver<Command> {
                 
         @Override
         public void onError(Throwable error) {
-                System.err.println(error.toString());
-                connect();
+                if (connectStatus != ConnectStatus.Connecting) {
+                        connectStatus = ConnectStatus.Disconnected;
+                }
+                
+                if (!quit) {
+                        connect();
+                }
         }
                 
         @Override
         public void onCompleted() {
-                connect();
+                connectStatus = ConnectStatus.Disconnected;
+                if (outputStream != null) {
+                        outputStream.onCompleted();
+                }
+
+                if (!quit) {
+                        connect();
+                }
         }
 
         private void connect() {
+                if (connectStatus != ConnectStatus.Disconnected) {
+                        return;
+                }
+
+                connectStatus = ConnectStatus.Connecting;                
                 int[] backoff = new int[]{ 4, 8, 16, 32, 64, 128 };
-                connected = false;
                 int retry = 0;
 
-                while (!connected) {
+                while (connectStatus != ConnectStatus.Connected) {
                         reconnect();
                         try {
                                 long time = 1000 * (retry < backoff.length ? backoff[retry] : backoff[backoff.length-1]);
@@ -86,7 +112,6 @@ public class LogReportSession implements StreamObserver<Command> {
                 new Thread(() -> {
                                 outputStream = stub.reportLog(this);
                                 reportDeviceAndAppInfo();
-                                connected = true;
                 }).start();
         }
 
@@ -96,6 +121,12 @@ public class LogReportSession implements StreamObserver<Command> {
 
         public void reportLog(LogRecord log) {
                 outputStream.onNext(log);
+        }
+
+        public void shutdown() {
+                quit = true;
+                outputStream.onCompleted();
+                outputStream = null;
         }
 }
 
