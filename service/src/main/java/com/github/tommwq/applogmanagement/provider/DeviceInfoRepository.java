@@ -1,4 +1,4 @@
-package com.github.tommwq.applogmanagement.repository;
+package com.github.tommwq.applogmanagement.provider;
 
 import com.github.tommwq.applogmanagement.api.DeviceInfoRepositoryApi;
 import com.github.tommwq.applogmanagement.api.DeviceInfoRepositoryApi.DeviceInfo;
@@ -18,8 +18,7 @@ public class DeviceInfoRepository implements DeviceInfoRepositoryApi {
         }
 
         public void deviceConnect(DeviceAndAppInfo info) {
-                new Call(() -> helper.insert(new DeviceInfo(info))).rethrow();
-                
+                new Call(() -> helper.insert(new DeviceInfo(info))).rethrow();                
         }
 
         public void deviceDisconnect(String deviceId) {

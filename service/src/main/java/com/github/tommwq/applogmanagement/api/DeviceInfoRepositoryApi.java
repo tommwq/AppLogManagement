@@ -8,11 +8,22 @@ public interface DeviceInfoRepositoryApi {
         public static class DeviceInfo {
                 public String deviceId;
                 public String deviceInfo;
-                public boolean isOnline;
+                public int isOnline; // 0 for false, 1 for true
+
+                public DeviceInfo() {
+                }
+                
                 public DeviceInfo(DeviceAndAppInfo aInfo) {
                         deviceId = aInfo.getDeviceId();
                         deviceInfo = aInfo.toString();
-                        isOnline = true;
+                        isOnline = 1;
+                }
+
+                public String toString() {
+                        return String.format("<DeviceInfo deviceId=%s isOnline=%d deviceInfo=%s>",
+                                             deviceId,
+                                             isOnline,
+                                             deviceInfo);
                 }
         }
         

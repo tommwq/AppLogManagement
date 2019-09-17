@@ -1,12 +1,12 @@
 package com.github.tommwq.applogmanagement;
 
+import com.github.tommwq.applogmanagement.agent.LogReportAgent;
 import com.github.tommwq.applogmanagement.logging.Logger;
 import com.github.tommwq.applogmanagement.logging.SimpleLogger;
 import com.github.tommwq.applogmanagement.storage.SimpleBlockStorage;
 import com.github.tommwq.applogmanagement.storage.SimpleBlockStorage.Config;
 import java.util.Date;
 import java.util.UUID;
-import com.github.tommwq.applogmanagement.agent.LogReportAgent;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -54,8 +54,8 @@ public class AppLogClientApplication implements CommandLineRunner {
 
                 // record user defined message
                 while (true) {
-                        Thread.sleep(3 * 60 * 1000);
-                        // logger.print(new Date());
+                        Thread.sleep(3 * 1000);
+                        logger.print(new Date());
                 }
 
                 // logger.close();

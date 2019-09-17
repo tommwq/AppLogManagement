@@ -10,14 +10,16 @@ import com.github.tommwq.applogmanagement.http.LogRecordHttp;
 import com.github.tommwq.applogmanagement.LogManagementServer;
 import com.github.tommwq.applogmanagement.LogManagementService;
 import com.github.tommwq.applogmanagement.LogManagementServiceGrpc;
-import com.github.tommwq.applogmanagement.repository.LogRecordRepository;
-import com.github.tommwq.applogmanagement.repository.SQLiteLogRecordRepository;
+import com.github.tommwq.applogmanagement.api.LogRepositoryApi;
+import com.github.tommwq.applogmanagement.provider.LogRepository;
 import com.github.tommwq.applogmanagement.LogSession;
 import com.github.tommwq.utility.network.SocketAddressParser;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import io.grpc.stub.StreamObserver;
 import java.io.File;
+import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +41,7 @@ import org.springframework.web.servlet.ModelAndView;
 @RestController
 public class ApiController implements InitializingBean {
 
-        private LogRecordRepository repository;
+        private LogRepositoryApi repository;
 
         @Autowired
         private LogManagementServer server;
@@ -53,7 +55,9 @@ public class ApiController implements InitializingBean {
         @Override
         public void afterPropertiesSet() {
                 try {
-                        repository = new SQLiteLogRecordRepository(new File("./log.db"));
+                        String fileName = "applog.db";
+                        Connection connection = DriverManager.getConnection("jdbc:sqlite:" + fileName);
+                        repository = new LogRepository(connection);
                 } catch (SQLException e) {
                         throw new RuntimeException("fail to open log record repository", e);
                 }
@@ -61,19 +65,19 @@ public class ApiController implements InitializingBean {
 
         @RequestMapping(value="/api/devices")
         @ResponseBody
-        public Set<String> device() {
-                return server.getService().getOnlineDeviceIdSet();
+        public List<String> device() {
+                return server.getService().onlineDeviceIdList();
         }
 
         @RequestMapping(value="/api/log/{deviceId}")
         @ResponseBody
         public List<LogRecordHttp>log(@PathVariable("deviceId") String deviceId) throws Exception {
-                LogSession session = server.getService().getLogSession(deviceId);
+                LogSession session = server.getService().logSession(deviceId);
                 if (session != null) {
                         session.command();
                 }
                               
-                return repository.load(deviceId, 0L, 0)
+                return repository.load(deviceId)
                         .stream()
                         .map(LogRecordCodec::toPojo)
                         .collect(Collectors.toList());

@@ -9,13 +9,17 @@ import java.util.List;
 public interface CommandRepositoryApi {
 
         public static class Command {
-                String command;
+                public String command;
+
+                public Command() {
+                }
+                
                 public Command(com.github.tommwq.applogmanagement.AppLogManagementProto.Command cmd) {
                         command = cmd.toString();
                 }
         }
         
-        void save(Command log);
-        void remove(Command log);
-        List<Command> loadAll();
+        void save(com.github.tommwq.applogmanagement.AppLogManagementProto.Command log);
+        void remove(com.github.tommwq.applogmanagement.AppLogManagementProto.Command log);
+        List<com.github.tommwq.applogmanagement.AppLogManagementProto.Command> loadAll();
 }

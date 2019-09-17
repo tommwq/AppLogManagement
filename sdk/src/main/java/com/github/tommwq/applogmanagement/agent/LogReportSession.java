@@ -1,5 +1,9 @@
 package com.github.tommwq.applogmanagement.agent;
 
+import static com.github.tommwq.applogmanagement.Constant.DEFAULT_LOG_COUNT;
+import static com.github.tommwq.applogmanagement.Constant.INVALID_COUNT;
+import static com.github.tommwq.applogmanagement.Constant.INVALID_SEQUENCE;
+
 import com.github.tommwq.applogmanagement.AppLogManagementProto.LogType;
 import com.github.tommwq.applogmanagement.AppLogManagementProto.LogRecord;
 import com.github.tommwq.applogmanagement.AppLogManagementProto.Command;
@@ -13,25 +17,23 @@ import io.grpc.StatusRuntimeException;
 import io.grpc.stub.StreamObserver;
 import java.util.concurrent.TimeUnit;
 import java.util.List;
-import static com.github.tommwq.applogmanagement.Constant.DEFAULT_LOG_COUNT;
-import static com.github.tommwq.applogmanagement.Constant.INVALID_COUNT;
-import static com.github.tommwq.applogmanagement.Constant.INVALID_SEQUENCE;
+import org.slf4j.LoggerFactory;
 
 /**
  * Receive Command, send requested logs.
  */
 public class LogReportSession implements StreamObserver<Command> {
 
-        private static enum ConnectStatus {
-                Disconnected, Connected, Connecting;
-        }
+        private static final org.slf4j.Logger debugLogger = LoggerFactory.getLogger(LogReportSession.class);
 
         private LogReportAgent agent;
         private StreamObserver<LogRecord> outputStream = null;
         private Logger logger;
         private LogManagementServiceGrpc.LogManagementServiceStub stub;
-        private ConnectStatus connectStatus = ConnectStatus.Disconnected;
         private boolean quit = false;
+
+        private int[] backoff = new int[]{ 0, 4, 8, 16, 32, 64, 128 };
+        private int backoffIndex = 0;
         
         public LogReportSession(LogReportAgent aAgent,
                                 Logger aLogger,
@@ -45,9 +47,8 @@ public class LogReportSession implements StreamObserver<Command> {
 
         @Override
         public void onNext(Command command) {
-                if (connectStatus != ConnectStatus.Connected) {
-                        connectStatus = ConnectStatus.Connected;
-                }
+                backoffIndex = 0;
+                debugLogger.warn("onNext");
                 
                 long sequence = command.getSequence();
                 int count = command.getCount();
@@ -66,9 +67,7 @@ public class LogReportSession implements StreamObserver<Command> {
                 
         @Override
         public void onError(Throwable error) {
-                if (connectStatus != ConnectStatus.Connecting) {
-                        connectStatus = ConnectStatus.Disconnected;
-                }
+                debugLogger.warn("onError");
                 
                 if (!quit) {
                         connect();
@@ -77,7 +76,8 @@ public class LogReportSession implements StreamObserver<Command> {
                 
         @Override
         public void onCompleted() {
-                connectStatus = ConnectStatus.Disconnected;
+                debugLogger.warn("onCompleted");
+                
                 if (outputStream != null) {
                         outputStream.onCompleted();
                 }
@@ -88,31 +88,24 @@ public class LogReportSession implements StreamObserver<Command> {
         }
 
         private void connect() {
-                if (connectStatus != ConnectStatus.Disconnected) {
-                        return;
-                }
 
-                connectStatus = ConnectStatus.Connecting;                
-                int[] backoff = new int[]{ 4, 8, 16, 32, 64, 128 };
-                int retry = 0;
-
-                while (connectStatus != ConnectStatus.Connected) {
-                        reconnect();
-                        try {
-                                long time = 1000 * (retry < backoff.length ? backoff[retry] : backoff[backoff.length-1]);
-                                Thread.sleep(time);
-                        } catch (InterruptedException e) {
-                                break;
+                if (backoffIndex != 0) {
+                        if (backoffIndex >= backoff.length) {
+                                backoffIndex = backoff.length - 1;
                         }
-                        retry++;
+                        
+                        try {
+                                long ms = backoff[backoffIndex] * 1000;
+                                debugLogger.warn("sleep " + ms + " ms");
+                                Thread.sleep(ms);
+                        } catch (InterruptedException e) {
+                                // ignore
+                        }
                 }
-        }
-
-        private void reconnect() {
-                new Thread(() -> {
-                                outputStream = stub.reportLog(this);
-                                reportDeviceAndAppInfo();
-                }).start();
+                backoffIndex++;
+                
+                outputStream = stub.reportLog(this);
+                reportDeviceAndAppInfo();
         }
 
         public void reportDeviceAndAppInfo() {

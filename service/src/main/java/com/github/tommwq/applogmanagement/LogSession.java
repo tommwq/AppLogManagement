@@ -5,8 +5,7 @@ import com.google.protobuf.InvalidProtocolBufferException;
 import com.github.tommwq.applogmanagement.AppLogManagementProto.LogRecord;
 import com.github.tommwq.applogmanagement.AppLogManagementProto.Command;
 import com.github.tommwq.applogmanagement.AppLogManagementProto.DeviceAndAppInfo;
-import com.github.tommwq.applogmanagement.repository.LogRecordRepository;
-import com.github.tommwq.applogmanagement.repository.MemoryLogRecordRepository;
+import com.github.tommwq.applogmanagement.api.DeviceLogManagementServiceApi;
 import io.grpc.stub.StreamObserver;
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
@@ -15,49 +14,44 @@ import org.springframework.stereotype.Component;
 public class LogSession implements StreamObserver<LogRecord> {
 
         private String deviceId = "";
-        private ConcurrentHashMap<String, LogSession> deviceTable;
         private StreamObserver<Command> outputStream;
-        private LogRecordRepository repository;
+        private DeviceLogManagementServiceApi service;
     
-        public LogSession(StreamObserver<Command> aOutputStream,
-                          ConcurrentHashMap<String,LogSession> aDeviceTable,
-                          LogRecordRepository aRepository) {
-                
+        public LogSession(StreamObserver<Command> aOutputStream, DeviceLogManagementServiceApi aService) {
                 outputStream = aOutputStream;
-                deviceTable = aDeviceTable;
-                repository = aRepository;
+                service = aService;
         }
       
         @Override
         public void onNext(LogRecord newLog) {
-                          
+
+                System.out.println(newLog.toString());
+                
                 Any body = newLog.getBody();
                 if (body.is(DeviceAndAppInfo.class)) {
                         try {
                                 DeviceAndAppInfo info = body.unpack(DeviceAndAppInfo.class);
                                 deviceId = info.getDeviceId();
-                                if (!deviceTable.containsKey(deviceId)) {
-                                        deviceTable.put(deviceId, this);
-                                }
+                                service.deviceConnect(info, this);
                         } catch (InvalidProtocolBufferException e) {
                                 e.printStackTrace(System.err);
                         }
                 }
 
                 if (!deviceId.isEmpty()) {
-                        repository.save(deviceId, newLog);
+                        service.saveLog(deviceId, newLog);
                 }
         }
     
         @Override
         public void onError(Throwable throwable) {
-                deviceTable.remove(deviceId);
+                service.deviceDisconnect(deviceId, throwable);
         }
     
         @Override
         public void onCompleted() {
                 outputStream.onCompleted();
-                deviceTable.remove(deviceId);
+                service.deviceDisconnect(deviceId);
         }
 
         public void command() {

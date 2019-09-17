@@ -1,0 +1,15 @@
+version: '3'
+
+services:
+  server:
+    image: 'tq/applog:0.0.1'
+    ports:
+      - "8080:8080"
+      - "50051:50051"
+    expose:
+      - "50051"
+  client:
+    image: 'tq/applogcli:0.0.1'
+    links:
+      - "server"
+

@@ -10,9 +10,7 @@
       <p v-if="deviceIdList.length == 0">no online device</p>
       <ol>
         <li v-for="deviceId in deviceIdList">
-          <a v-bind:href="'log.html?deviceId='+deviceId" target=_blank>
-            {{deviceId}}
-          </a>
+          <span v-on:click="query(deviceId)"> {{deviceId}} </span>
         </li>
       </ol>
     </div>

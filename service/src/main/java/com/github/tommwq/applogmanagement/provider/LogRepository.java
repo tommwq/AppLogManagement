@@ -1,12 +1,14 @@
-package com.github.tommwq.applogmanagement.repository;
+package com.github.tommwq.applogmanagement.provider;
 
-import com.google.protobuf.TextFormat;
-import com.google.protobuf.TextFormat.ParseException;
+import com.github.tommwq.applogmanagement.api.LogRepositoryApi;
+import com.github.tommwq.applogmanagement.AppLogManagementProto.LogRecord;
 import com.github.tommwq.utility.database.DBHelper;
 import com.github.tommwq.utility.database.SQLiteHelper;
+import com.github.tommwq.utility.function.Call;
 import com.github.tommwq.utility.function.Predicates;
 import com.github.tommwq.utility.Util;
-import com.github.tommwq.applogmanagement.AppLogManagementProto.LogRecord;
+import com.google.protobuf.TextFormat;
+import com.google.protobuf.TextFormat.ParseException;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.sql.Blob;
@@ -22,7 +24,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class SQLiteLogRecordRepository implements LogRecordRepository {
+public class LogRepository implements LogRepositoryApi {
 
         private static class Log {
                 String deviceId;
@@ -37,18 +39,14 @@ public class SQLiteLogRecordRepository implements LogRecordRepository {
         private Connection conn;
         private DBHelper helper;
                 
-        public SQLiteLogRecordRepository(File databaseFile) throws SQLException {
-                conn = DriverManager.getConnection("jdbc:sqlite:" + databaseFile.getName());
+        public LogRepository(Connection aConnection) throws SQLException {
+                conn = aConnection;
                 helper = new SQLiteHelper(conn).createTableInNeed(Log.class);
         }
         
         @Override
         public void save(String deviceId, LogRecord logRecord) {
-                try {
-                        save(new Log(deviceId, logRecord.toString()));
-                } catch (SQLException e) {
-                        throw new RuntimeException("fail to save log record", e);
-                }
+                new Call(() -> save(new Log(deviceId, logRecord.toString()))).rethrow();
         }
 
         private void save(Log log) throws SQLException {
@@ -56,27 +54,22 @@ public class SQLiteLogRecordRepository implements LogRecordRepository {
         }
 
         @Override
-        public List<LogRecord> load(String deviceId, long sequence, int count) {
-                try {
-                        return loadLog(deviceId, sequence, count)
-                                .stream()
-                                .map(log -> {
-                                                try {
-                                                        LogRecord.Builder builder = LogRecord.newBuilder();
-                                                        com.google.protobuf.TextFormat.getParser().merge(log.logRecord, builder);
-                                                        return builder.build();
-                                                } catch (ParseException e) {
-                                                        return null;
-                                                }
-                                        })
-                                .filter(Predicates::notNull)
-                                .collect(Collectors.toList());
-                } catch (SQLException e) {
-                        throw new RuntimeException("fail to load log record", e);
-                }
+        public List<LogRecord> load(String deviceId) {
+                List<Log> logList = (List<Log>) new Call((nil) -> loadLog(deviceId), null, null)
+                        .rethrow()
+                        .result();
+                
+                return logList.stream()
+                        .map(log -> (LogRecord) new Call((nil) -> {
+                                                LogRecord.Builder builder = LogRecord.newBuilder();
+                                                com.google.protobuf.TextFormat.getParser().merge(log.logRecord, builder);
+                                                return builder.build();
+                        }, null, null).result())
+                        .filter(Predicates::notNull)
+                        .collect(Collectors.toList());
         }
   
-        public List<Log> loadLog(String deviceId, long sequence, int count) throws SQLException {
+        public List<Log> loadLog(String deviceId) throws SQLException {
                 List<Log> logList = new ArrayList<>();
                 String query = helper.selectSQL(Log.class) + " WHERE deviceId=?";
                 try (PreparedStatement pstmt = conn.prepareStatement(query)) {

@@ -1,7 +1,6 @@
-FROM alpine
+FROM tq/java:0.0.1
 
-RUN apk update
-RUN apk add openjdk8 busybox
+RUN apk add sqlite
 
 ADD applogmanagement-0.0.1-SNAPSHOT.war applogmanagement-0.0.1-SNAPSHOT.war
 ADD application.properties application.properties

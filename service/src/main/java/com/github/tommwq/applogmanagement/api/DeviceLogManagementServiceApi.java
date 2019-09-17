@@ -9,11 +9,11 @@ import java.util.List;
 public interface DeviceLogManagementServiceApi {
         void open();
         void close();
-        void onDeviceConnected(DeviceAndAppInfo info);
-        void onDeviceDisconnected(String deviceId);
+        void deviceConnect(DeviceAndAppInfo info, Object context);
+        void deviceDisconnect(String deviceId);
+        void deviceDisconnect(String deviceId, Throwable error);
         List<String> onlineDeviceIdList();
-        List<LogRecord> readLogCache(String deviceId);
-        void appendLogCache(String deviceId, List<LogRecord> logList);
-        void appendLogCache(String deviceId, LogRecord log);
-
+        void saveLog(String deviceId, LogRecord log);
+        List<LogRecord> loadLog(String deviceId);
+        Object getContext(String deviceId);
 }
