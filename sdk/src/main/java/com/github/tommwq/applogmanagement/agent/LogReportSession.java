@@ -31,9 +31,7 @@ public class LogReportSession implements StreamObserver<Command> {
         private Logger logger;
         private LogManagementServiceGrpc.LogManagementServiceStub stub;
         private boolean quit = false;
-
-        private int[] backoff = new int[]{ 0, 4, 8, 16, 32, 64, 128 };
-        private int backoffIndex = 0;
+        private long lastConnectFailure = 0;
         
         public LogReportSession(LogReportAgent aAgent,
                                 Logger aLogger,
@@ -47,8 +45,9 @@ public class LogReportSession implements StreamObserver<Command> {
 
         @Override
         public void onNext(Command command) {
-                backoffIndex = 0;
                 debugLogger.warn("onNext");
+
+                lastConnectFailure = 0;
                 
                 long sequence = command.getSequence();
                 int count = command.getCount();
@@ -69,9 +68,33 @@ public class LogReportSession implements StreamObserver<Command> {
         public void onError(Throwable error) {
                 debugLogger.warn("onError");
                 
-                if (!quit) {
-                        connect();
+                if (quit) {
+                        return;
                 }
+
+                long now = System.currentTimeMillis();
+                if (lastConnectFailure != 0) {
+                        long gap = (now - lastConnectFailure) / 1000;
+                        long sleepTime;
+                        if (gap < 2) {
+                                sleepTime = 2;
+                        } else if (gap > 60) {
+                                sleepTime = 60;
+                        } else {
+                                sleepTime = gap * 2;
+                        }
+
+                        try {
+                                debugLogger.warn("sleep " + sleepTime);
+                                Thread.sleep(sleepTime * 1000);
+                        } catch (InterruptedException e) {
+                                // ignore
+                        }
+                } else {
+                        lastConnectFailure = now;
+                }
+                
+                connect();
         }
                 
         @Override
@@ -82,34 +105,25 @@ public class LogReportSession implements StreamObserver<Command> {
                         outputStream.onCompleted();
                 }
 
-                if (!quit) {
-                        connect();
+                if (quit) {
+                        return;
                 }
+
+                connect();
         }
 
         private void connect() {
-
-                if (backoffIndex != 0) {
-                        if (backoffIndex >= backoff.length) {
-                                backoffIndex = backoff.length - 1;
-                        }
-                        
-                        try {
-                                long ms = backoff[backoffIndex] * 1000;
-                                debugLogger.warn("sleep " + ms + " ms");
-                                Thread.sleep(ms);
-                        } catch (InterruptedException e) {
-                                // ignore
-                        }
-                }
-                backoffIndex++;
-                
-                outputStream = stub.reportLog(this);
-                reportDeviceAndAppInfo();
+                debugLogger.warn("connect");
+                new Thread(() -> {
+                                outputStream = stub.reportLog(this);
+                                reportDeviceAndAppInfo();
+                }).start();
         }
 
         public void reportDeviceAndAppInfo() {
+                debugLogger.warn("report 1");
                 outputStream.onNext(logger.deviceAndAppInfoLog());
+                debugLogger.warn("report 2");
         }
 
         public void reportLog(LogRecord log) {
