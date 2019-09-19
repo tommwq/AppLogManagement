@@ -45,10 +45,8 @@ public class LogReportSession implements StreamObserver<Command> {
 
         @Override
         public void onNext(Command command) {
-                debugLogger.warn("onNext");
-
                 lastConnectFailure = 0;
-                
+
                 long sequence = command.getSequence();
                 int count = command.getCount();
 
@@ -59,7 +57,7 @@ public class LogReportSession implements StreamObserver<Command> {
                         count = sequence < DEFAULT_LOG_COUNT ? (int) sequence : DEFAULT_LOG_COUNT;
                 }
 
-                logger.read(sequence, count)
+                logger.readAll() // (sequence, count)
                         .stream()
                         .forEach(log -> outputStream.onNext(log));
         }
@@ -67,6 +65,7 @@ public class LogReportSession implements StreamObserver<Command> {
         @Override
         public void onError(Throwable error) {
                 debugLogger.warn("onError");
+                debugLogger.error("error", error);
                 
                 if (quit) {
                         return;
@@ -121,9 +120,7 @@ public class LogReportSession implements StreamObserver<Command> {
         }
 
         public void reportDeviceAndAppInfo() {
-                debugLogger.warn("report 1");
                 outputStream.onNext(logger.deviceAndAppInfoLog());
-                debugLogger.warn("report 2");
         }
 
         public void reportLog(LogRecord log) {

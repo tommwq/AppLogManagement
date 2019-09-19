@@ -17,8 +17,8 @@ import com.github.tommwq.applogmanagement.logging.LogRecordStorage;
 import com.github.tommwq.applogmanagement.storage.SimpleBlockStorage;
 import com.github.tommwq.applogmanagement.logging.LogUtil;
 import com.github.tommwq.applogmanagement.DeviceAndAppConfig;
-import  com.github.tommwq.applogmanagement.storage.SimpleBlockStorage.Config;
-import  com.github.tommwq.applogmanagement.storage.BlockStorage;
+import com.github.tommwq.applogmanagement.storage.SimpleBlockStorage.Config;
+import com.github.tommwq.applogmanagement.storage.BlockStorage;
 import com.github.tommwq.utility.StringUtil;
 import com.github.tommwq.utility.function.Call;
 import com.github.tommwq.utility.ThreadUtil;
@@ -31,9 +31,12 @@ import java.util.concurrent.LinkedTransferQueue;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import org.slf4j.LoggerFactory;
 
 public class SimpleLogger extends Logger {
 
+        private static final org.slf4j.Logger debugLogger = LoggerFactory.getLogger(SimpleLogger.class);
+        
         private DeviceAndAppConfig config = new DeviceAndAppConfig();
         private LogRecordStorage storage;
         private LinkedTransferQueue<LogRecord> queue = new LinkedTransferQueue<>();
@@ -85,6 +88,7 @@ public class SimpleLogger extends Logger {
                         return;
                 }
 
+                debugLogger.debug("write log " + log.toString());
                 queue.offer(log);
         }
 
@@ -112,7 +116,7 @@ public class SimpleLogger extends Logger {
         }
 
         public List<LogRecord> readAll() {
-                return storage.read(maxLsn(), (int) maxLsn());
+                return storage.read(0, (int) maxLsn());
         }
 
         public LogRecord read() {

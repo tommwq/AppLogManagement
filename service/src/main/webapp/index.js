@@ -9,7 +9,6 @@ function formatUnknownLog(log) {
 }
 
 function formatDeviceAndAppInfoLog(log) {
-    console.log(log);
     var seq = log.header.sequence;
     var time = log.header.time;
     var deviceVersion = log.body.deviceVersion;
@@ -49,7 +48,7 @@ function formatExceptionInfoLog(log) {
 }
 
 function formatUserDefinedLog(log) {
-    console.log(log);
+    console.log("user defined", log);
 }
 
 function formatLog(log) {
@@ -82,7 +81,7 @@ Vue.component("log-viewer", {
     },
     props: ["log"],
     template: String.raw`
-<span>{{content}}</span>
+<div>{{content}}</div>
 `
 });
 
@@ -131,15 +130,35 @@ var logApp = new Vue({
     el: "#log",
     data: {
         show: false,
+        deviceId: "",
+        logList: [],
+        packageName: "",
     },
     methods: {
         run: function() {
             this.show = true;
+        },
+        query: function() {
+            axios.get("/api/log/" + this.deviceId).then(x => this.logList = x.data).catch(e => console.log(e));
         }
     },
     template: String.raw`
 <div class="app" v-if="show">
-TODO
+  <div>
+    <span>device id</span>
+    <input v-model="deviceId"></input>
+  </div>
+  <div>
+    <span>package name</span>
+    <input v-model="packageName"></input>
+  </div>
+  <button v-on:click="query()">query</button>
+  
+  <div>
+    <ul class="nomargin nopadding">
+      <li v-for="log in logList" class="log-item"><log-viewer v-bind:log=log></log-viewer></li>
+    </ul>
+  </div>
 </div>
 `
 });

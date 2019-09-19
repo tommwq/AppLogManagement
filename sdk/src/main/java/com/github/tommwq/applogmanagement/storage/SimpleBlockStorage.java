@@ -103,7 +103,7 @@ public class SimpleBlockStorage implements BlockStorage {
          */
         private int blockOffset(int blockNumber) {
                 if (blockNumber < 0 || blockNumber >= blockCount) {
-                        throw new IllegalArgumentException("invalid block number: " + blockNumber);
+                        throw new IllegalArgumentException("invalid block number: " + blockNumber + ", blockCount is " + blockCount);
                 }
 
                 return blockNumber * blockSize();

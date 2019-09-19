@@ -1,5 +1,7 @@
 package com.github.tommwq.applogmanagement.logging;
 
+import static com.github.tommwq.applogmanagement.Constant.*;
+
 import com.github.tommwq.applogmanagement.AppLogManagementProto.LogRecord;
 import com.github.tommwq.applogmanagement.storage.BlockStorage;
 import com.google.protobuf.InvalidProtocolBufferException;
@@ -12,11 +14,14 @@ import java.util.function.Predicate;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.zip.Adler32;
-import static com.github.tommwq.applogmanagement.Constant.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class LogRecordStorage implements BlockStorage {
         private static final int MIN_BLOCK_SIZE = 1024;
         private static final int MIN_BLOCK_COUNT = 8;
+
+        private static final Logger logger = LoggerFactory.getLogger(LogRecordStorage.class);
 
         private final byte[] emptyBlock;
         private AnchorBlock anchorBlock;
@@ -286,19 +291,23 @@ public class LogRecordStorage implements BlockStorage {
         }
 
         synchronized public List<LogRecord> read(long sequence, int count) {
-                if (count == 0) {
-                        count = (int) sequence;
-                }
-                
+                final int queryCount = count <= 0 ? (int) sequence : count;
+
+                logger.debug("read(" + sequence + "," + count + ")");
+                logger.debug("min " + logBlock.minSequence());
+                logger.debug("first " + anchorBlock.firstBlockNumber());
+                logger.debug("last " + anchorBlock.lastBlockNumber());
+                                
                 ArrayList<LogRecord> records = new ArrayList<>();
                 if (sequence > logBlock.maxSequence()) {
                         return records;
                 }
 
                 Predicate<LogRecord> filter = (log) -> {
-                        // long seq = log.getSequence();
-                        // return (seq > sequence - count && seq <= sequence);
-                        return true;
+                        long seq = log.getHeader().getSequence();
+                        boolean result = (seq >= sequence && seq < sequence + count);
+                        logger.debug("filter " + seq + " " + result);
+                        return result;
                 };
 
                 if (sequence - count + 1 > logBlock.minSequence()) {
@@ -309,15 +318,22 @@ public class LogRecordStorage implements BlockStorage {
                 }
 
                 LogBlock block = new LogBlock(blockSize());
-                for (int blockNumber = anchorBlock.firstBlockNumber();
-                     blockNumber <= anchorBlock.lastBlockNumber() - 2; // skip ping-pong blocks
-                     blockNumber++) {
-
+                int blockNumber = anchorBlock.firstBlockNumber();
+                while (true) {
+                        logger.debug("read from block " + blockNumber);
                         if (readLogBlock(blockNumber, block)) {
                                 records.addAll(block.logs()
                                                .stream()
                                                .filter(filter)
                                                .collect(Collectors.toList()));
+                        }
+
+                        blockNumber++;
+                        if (blockNumber == anchorBlock.lastBlockNumber()) {
+                                break;
+                        }
+                        if (blockNumber == blockCount()) {
+                                blockNumber = FIRST_LOG_BLOCK;
                         }
                 }
 
@@ -328,6 +344,8 @@ public class LogRecordStorage implements BlockStorage {
                                        .collect(Collectors.toList()));
                 }
 
+                logger.debug("read " + records.size() + " records");
+                
                 return records;
         }
 

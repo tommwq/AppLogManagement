@@ -5,12 +5,16 @@ import com.github.tommwq.applogmanagement.AppLogManagementProto.LogRecord;
 import com.github.tommwq.applogmanagement.logging.LogRecordStorage;
 import java.io.IOException;
 import java.util.concurrent.LinkedTransferQueue;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class FlushThread extends Thread {
 
         public static final LogRecord END_OF_QUEUE = LogRecord.newBuilder()
                 .setHeader(LogHeader.newBuilder().setSequence(0L).build())
                 .build();
+
+        private static final Logger logger = LoggerFactory.getLogger(FlushThread.class);
 
         private LinkedTransferQueue<LogRecord> queue;
         private LogRecordStorage storage;
@@ -29,6 +33,7 @@ public class FlushThread extends Thread {
                                 }
                         
                                 storage.write(record);
+                                logger.debug("write log to storage " + record.toString());
                         } catch (InterruptedException e) {
                                 // ignore
                         } catch (IOException e) {

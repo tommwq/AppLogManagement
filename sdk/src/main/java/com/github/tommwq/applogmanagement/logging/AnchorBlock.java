@@ -40,6 +40,9 @@ public class AnchorBlock {
                 if (lastBlockNumber == firstBlockNumber) {
                         firstBlockNumber++;
                 }
+                if (firstBlockNumber == blockCount) {
+                        firstBlockNumber = FIRST_LOG_BLOCK;
+                }
         }
 
         private void clear() {
