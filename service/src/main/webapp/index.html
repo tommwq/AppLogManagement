@@ -1,32 +1,21 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <meta charset="UTF-8"/>
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <script src="https://cdn.bootcss.com/axios/0.19.0-beta.1/axios.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="index.css" />
   </head>
   <body>
-    <div id="app">
-      <p>online device</p>
-      <p v-if="deviceIdList.length == 0">no online device</p>
-      <ol>
-        <li v-for="deviceId in deviceIdList">
-          <span v-on:click="query(deviceId)"> {{deviceId}} </span>
-        </li>
-      </ol>
+    <div id="navigate">
     </div>
-
-    <div id="query-app">
-      <span>device id</span> <input v-model="deviceId" /> <br/>
-      <span>package </span> <input v-model="packageName" /> <br/>
-      <button v-on:click="query">query</button>
-      <hr/>
-      <p>device log</p>
-      <p v-if="logList.length == 0">no log</p>
-      <ol>
-        <li v-for="log in logList">
-          {{log}}
-        </li>
-      </ol>
+    <div id="device">
+    </div>
+    <div id="log">
+    </div>
+    <div id="offlineLog">
+    </div>
+    <div id="status">
     </div>
     <script src="index.js"></script>
   </body>

@@ -39,6 +39,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 @RestController
+@RequestMapping(value="/api")
 public class ApiController implements InitializingBean {
 
         private LogRepositoryApi repository;
@@ -63,13 +64,13 @@ public class ApiController implements InitializingBean {
                 }
         }
 
-        @RequestMapping(value="/api/devices")
+        @RequestMapping(value="/devices")
         @ResponseBody
         public List<String> device() {
                 return server.getService().onlineDeviceIdList();
         }
 
-        @RequestMapping(value="/api/log/{deviceId}")
+        @RequestMapping(value="/log/{deviceId}")
         @ResponseBody
         public List<LogRecordHttp>log(@PathVariable("deviceId") String deviceId) throws Exception {
                 LogSession session = server.getService().logSession(deviceId);
@@ -83,13 +84,13 @@ public class ApiController implements InitializingBean {
                         .collect(Collectors.toList());
         }
         
-        @RequestMapping("/api/status")
+        @RequestMapping("/status")
         @ResponseBody
         public Status status() {
-                return status;
+                return status.refresh();
         }
 
-        @RequestMapping("/api/lookup/{deviceId}")
+        @RequestMapping("/lookup/{deviceId}")
         @ResponseBody
         public List<DeviceAndAppInfoHttp> lookup(@PathVariable("deviceId") String deviceId) {
                 System.out.println("lookup");
