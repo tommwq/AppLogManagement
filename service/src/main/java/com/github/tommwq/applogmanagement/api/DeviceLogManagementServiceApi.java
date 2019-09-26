@@ -16,4 +16,6 @@ public interface DeviceLogManagementServiceApi {
         void saveLog(String deviceId, LogRecord log);
         List<LogRecord> loadLog(String deviceId);
         Object getContext(String deviceId);
+        List<Command> queryCachedCommand();
+        void cacheCommand(Command command);
 }

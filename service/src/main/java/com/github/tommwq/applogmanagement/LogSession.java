@@ -9,6 +9,8 @@ import com.github.tommwq.applogmanagement.api.DeviceLogManagementServiceApi;
 import io.grpc.stub.StreamObserver;
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Component;
 
 public class LogSession implements StreamObserver<LogRecord> {
@@ -21,18 +23,29 @@ public class LogSession implements StreamObserver<LogRecord> {
                 outputStream = aOutputStream;
                 service = aService;
         }
+
+        private void onDeviceConnect(String deviceId) {
+                List<Command> cached = service.queryCachedCommand()
+                        .stream()
+                        .filter(command -> command.getDeviceId().equals(deviceId))
+                        .collect(Collectors.toList());
+
+                if (cached.isEmpty()) {
+                        return;
+                }
+
+                outputStream.onNext(cached.get(0));
+        }
       
         @Override
         public void onNext(LogRecord newLog) {
-
-                System.out.println(newLog.toString());
-                
                 Any body = newLog.getBody();
                 if (body.is(DeviceAndAppInfo.class)) {
                         try {
                                 DeviceAndAppInfo info = body.unpack(DeviceAndAppInfo.class);
                                 deviceId = info.getDeviceId();
                                 service.deviceConnect(info, this);
+                                onDeviceConnect(deviceId);
                         } catch (InvalidProtocolBufferException e) {
                                 e.printStackTrace(System.err);
                         }

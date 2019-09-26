@@ -1,16 +1,20 @@
 package com.github.tommwq.applogmanagement.controller;
 
+import com.github.tommwq.applogmanagement.api.DeviceLogManagementServiceApi;
+import com.github.tommwq.applogmanagement.api.LogRepositoryApi;
 import com.github.tommwq.applogmanagement.AppLogManagementProto.Command;
 import com.github.tommwq.applogmanagement.AppLogManagementProto.DeviceAndAppInfo;
 import com.github.tommwq.applogmanagement.AppLogManagementProto.LogRecord;
-import com.github.tommwq.applogmanagement.http.codec.LogRecordCodec;
+import com.github.tommwq.applogmanagement.http.codec.CommandCodec;
 import com.github.tommwq.applogmanagement.http.codec.DeviceAndAppInfoCodec;
+import com.github.tommwq.applogmanagement.http.codec.LogRecordCodec;
+import com.github.tommwq.applogmanagement.http.CommandHttp;
 import com.github.tommwq.applogmanagement.http.DeviceAndAppInfoHttp;
 import com.github.tommwq.applogmanagement.http.LogRecordHttp;
 import com.github.tommwq.applogmanagement.LogManagementServer;
 import com.github.tommwq.applogmanagement.LogManagementService;
 import com.github.tommwq.applogmanagement.LogManagementServiceGrpc;
-import com.github.tommwq.applogmanagement.api.LogRepositoryApi;
+import com.github.tommwq.applogmanagement.provider.DeviceLogManagementService;
 import com.github.tommwq.applogmanagement.provider.LogRepository;
 import com.github.tommwq.applogmanagement.LogSession;
 import com.github.tommwq.utility.network.SocketAddressParser;
@@ -42,6 +46,8 @@ import org.springframework.web.servlet.ModelAndView;
 @RequestMapping(value="/api")
 public class ApiController implements InitializingBean {
 
+        private DeviceLogManagementServiceApi service = new DeviceLogManagementService();
+
         private LogRepositoryApi repository;
 
         @Autowired
@@ -59,6 +65,7 @@ public class ApiController implements InitializingBean {
                         String fileName = "applog.db";
                         Connection connection = DriverManager.getConnection("jdbc:sqlite:" + fileName);
                         repository = new LogRepository(connection);
+                        service.open();
                 } catch (SQLException e) {
                         throw new RuntimeException("fail to open log record repository", e);
                 }
@@ -128,5 +135,29 @@ public class ApiController implements InitializingBean {
 
                 channelStream.forEach(ManagedChannel::shutdown);
                 return infoList;
+        }
+
+        @RequestMapping("/command")
+        @ResponseBody
+        public List<CommandHttp> command() {
+                return service.queryCachedCommand()
+                        .stream()
+                        .map(CommandCodec::toPojo)
+                        .collect(Collectors.toList());
+        }
+
+        // TODO 重新设计返回接口。
+        @RequestMapping("/command/new/{deviceId}/{packageName}")
+        @ResponseBody
+        public String cacheCommand(@PathVariable("deviceId") String deviceId,
+                                              @PathVariable("packageName") String packageName) {
+
+                Command command = Command.newBuilder()
+                        .setDeviceId(deviceId)
+                        .setPackageName(packageName)
+                        .build();
+
+                service.cacheCommand(command);                
+                return "ok";
         }
 }

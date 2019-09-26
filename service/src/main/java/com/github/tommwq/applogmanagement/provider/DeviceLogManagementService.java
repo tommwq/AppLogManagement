@@ -65,7 +65,7 @@ public class DeviceLogManagementService implements DeviceLogManagementServiceApi
         }
 
         public void deviceDisconnect(String deviceId) {
-                deviceDisconnect(deviceId);
+                deviceTable.remove(deviceId);
         }
 
         public void deviceDisconnect(String deviceId, Throwable error) {
@@ -93,5 +93,15 @@ public class DeviceLogManagementService implements DeviceLogManagementServiceApi
 
         public List<LogRecord> loadLog(String deviceId) {
                 return logRepository.load(deviceId);
+        }
+
+        @Override
+        public List<Command> queryCachedCommand() {
+                return commandRepository.loadAll();
+        }
+
+        @Override
+        public void cacheCommand(Command command) {
+                commandRepository.save(command);
         }
 }

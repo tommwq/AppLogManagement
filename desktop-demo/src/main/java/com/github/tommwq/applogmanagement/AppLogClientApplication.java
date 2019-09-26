@@ -26,7 +26,7 @@ public class AppLogClientApplication implements CommandLineRunner {
                 DeviceAndAppConfig info = new DeviceAndAppConfig()
                         .setAppVersion("0.1.0")
                         .setModuleVersion("client", "0.1.0")
-                        .setDeviceId(UUID.randomUUID().toString());
+                        .setDeviceId("abc");
 
                 Config config = new Config()
                         .fileName("a.blk")
@@ -53,13 +53,15 @@ public class AppLogClientApplication implements CommandLineRunner {
                 logger.error(error);
 
                 // record user defined message
-                while (true) {
-                        Thread.sleep(3 * 1000);
-                        logger.print(new Date());
-                }
+                // while (true) {
+                //         Thread.sleep(3 * 1000);
+                //         logger.print(new Date());
+                // }
 
-                // logger.close();
-                // System.out.println("logger closed");
-                // agent.shutdown();
+                Thread.sleep(1000);
+
+                logger.close();
+                System.out.println("logger closed");
+                agent.shutdown();
         }
 }

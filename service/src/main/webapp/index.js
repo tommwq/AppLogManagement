@@ -207,7 +207,10 @@ var logApp = new Vue({
             this.show = true;
         },
         query: function() {
-            axios.get("/api/log/" + this.deviceId).then(x => this.logList = x.data).catch(e => console.log(e));
+            axios.get("/api/log/" + this.deviceId).then(x => {
+                console.log(x);
+                this.logList = x.data;
+            }).catch(e => console.log(e));
         }
     },
     template: `
@@ -235,15 +238,30 @@ var offlineLogApp = new Vue({
     el: "#offlineLog",
     data: {
         show: false,
+        deviceId: '',
+        packageName: '',
     },
     methods: {
         run: function() {
             this.show = true;
-        }
+        },
+        command: function() {
+            axios.get(`/api/command/new/${this.deviceId}/${this.packageName}`).then(x => {
+                console.log(x);
+            }).catch(e => console.log(e));
+        },
     },
     template: `
 <div class="app" v-if="show">
-TODO
+  <div>
+    <span>device id</span>
+    <input v-model="deviceId"></input>
+  </div>
+  <div>
+    <span>package name</span>
+    <input v-model="packageName"></input>
+  </div>
+  <button v-on:click="command()">query</button>
 </div>
 `
 });
