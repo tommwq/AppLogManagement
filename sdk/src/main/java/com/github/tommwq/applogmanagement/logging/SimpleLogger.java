@@ -31,12 +31,9 @@ import java.util.concurrent.LinkedTransferQueue;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import org.slf4j.LoggerFactory;
 
 public class SimpleLogger extends Logger {
 
-        private static final org.slf4j.Logger debugLogger = LoggerFactory.getLogger(SimpleLogger.class);
-        
         private DeviceAndAppConfig config = new DeviceAndAppConfig();
         private LogRecordStorage storage;
         private LinkedTransferQueue<LogRecord> queue = new LinkedTransferQueue<>();
@@ -88,7 +85,6 @@ public class SimpleLogger extends Logger {
                         return;
                 }
 
-                debugLogger.debug("write log " + log.toString());
                 queue.offer(log);
         }
 

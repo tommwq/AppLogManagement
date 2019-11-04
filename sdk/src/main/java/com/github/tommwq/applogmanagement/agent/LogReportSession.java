@@ -17,14 +17,11 @@ import io.grpc.StatusRuntimeException;
 import io.grpc.stub.StreamObserver;
 import java.util.concurrent.TimeUnit;
 import java.util.List;
-import org.slf4j.LoggerFactory;
 
 /**
  * Receive Command, send requested logs.
  */
 public class LogReportSession implements StreamObserver<Command> {
-
-        private static final org.slf4j.Logger debugLogger = LoggerFactory.getLogger(LogReportSession.class);
 
         private LogReportAgent agent;
         private StreamObserver<LogRecord> outputStream = null;
@@ -64,9 +61,6 @@ public class LogReportSession implements StreamObserver<Command> {
                 
         @Override
         public void onError(Throwable error) {
-                debugLogger.warn("onError");
-                debugLogger.error("error", error);
-                
                 if (quit) {
                         return;
                 }
@@ -84,7 +78,6 @@ public class LogReportSession implements StreamObserver<Command> {
                         }
 
                         try {
-                                debugLogger.warn("sleep " + sleepTime);
                                 Thread.sleep(sleepTime * 1000);
                         } catch (InterruptedException e) {
                                 // ignore
@@ -98,8 +91,6 @@ public class LogReportSession implements StreamObserver<Command> {
                 
         @Override
         public void onCompleted() {
-                debugLogger.warn("onCompleted");
-                
                 if (outputStream != null) {
                         outputStream.onCompleted();
                 }
@@ -112,7 +103,6 @@ public class LogReportSession implements StreamObserver<Command> {
         }
 
         private void connect() {
-                debugLogger.warn("connect");
                 new Thread(() -> {
                                 outputStream = stub.reportLog(this);
                                 reportDeviceAndAppInfo();

@@ -12,14 +12,12 @@ import io.grpc.ManagedChannelBuilder;
 import io.grpc.stub.StreamObserver;
 import java.util.concurrent.TimeUnit;
 import java.util.List;
-import org.slf4j.LoggerFactory;
 
 /**
  * connect to log management node, report logs when requested.
  */
 public class LogReportAgent {
 
-        private static final org.slf4j.Logger debugLogger = LoggerFactory.getLogger(LogReportAgent.class);
         private final ManagedChannel channel;
         private final LogManagementServiceGrpc.LogManagementServiceStub stub;
         
