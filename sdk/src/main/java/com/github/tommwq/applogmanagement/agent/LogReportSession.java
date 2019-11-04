@@ -42,6 +42,8 @@ public class LogReportSession implements StreamObserver<Command> {
 
         @Override
         public void onNext(Command command) {
+                debugLogger.warn("ON COMMAND " + command.toString());
+                
                 lastConnectFailure = 0;
 
                 long sequence = command.getSequence();
@@ -56,6 +58,7 @@ public class LogReportSession implements StreamObserver<Command> {
 
                 logger.readAll() // (sequence, count)
                         .stream()
+                        .filter(log -> log.getHeader().getLogType() != LogType.DEVICE_AND_APP_INFO)
                         .forEach(log -> outputStream.onNext(log));
         }
                 
