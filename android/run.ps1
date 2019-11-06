@@ -7,5 +7,12 @@ Set-Location ../sdk
 .\gradlew.bat build uploadArchives
 
 Set-Location ../android
-.\gradlew.bat iD
-adb shell am start-activity --es HOST $IP --es PORT 50051 com.tq.applogmanagement/com.github.tommwq.applogmanagement.MainActivity 
+
+if ($LastExitCode -eq 0)
+{
+    .\gradlew.bat iD
+    if ($LastExitCode -eq 0)
+    {
+        adb shell am start-activity --es HOST $IP --es PORT 50051 com.tq.applogmanagement/com.github.tommwq.applogmanagement.MainActivity 
+    }
+}

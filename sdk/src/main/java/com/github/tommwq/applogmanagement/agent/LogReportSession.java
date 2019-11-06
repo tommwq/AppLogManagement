@@ -42,7 +42,6 @@ public class LogReportSession implements StreamObserver<Command> {
 
         @Override
         public void onNext(Command command) {
-                debugLogger.warn("ON COMMAND " + command.toString());
                 
                 lastConnectFailure = 0;
 
