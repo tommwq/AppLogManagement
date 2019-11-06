@@ -66,9 +66,6 @@ public class MainActivity extends AppCompatActivity {
                 host = getStringExtra(HOST, "192.168.1.105");
                 String portString = getStringExtra(PORT, "50051");
                 port = Integer.valueOf(portString);
-                // String host = "172.24.20.112";
-                // host = "192.168.1.105";
-                // int port = 50051;
 
                 DeviceAndAppConfig info = new DeviceAndAppConfig()
                         .setAppVersion("0.1.0")

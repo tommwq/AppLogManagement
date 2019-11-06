@@ -1,3 +1,5 @@
+Vue.use(ElementUI);
+
 function trimString(s) {
     if (typeof(x) == "undefined" || x == null) {
         return ""

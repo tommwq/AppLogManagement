@@ -3,7 +3,6 @@ package com.github.tommwq.applogmanagement.agent;
 import static com.github.tommwq.applogmanagement.Constant.DEFAULT_LOG_COUNT;
 import static com.github.tommwq.applogmanagement.Constant.INVALID_COUNT;
 import static com.github.tommwq.applogmanagement.Constant.INVALID_SEQUENCE;
-
 import com.github.tommwq.applogmanagement.AppLogManagementProto.LogType;
 import com.github.tommwq.applogmanagement.AppLogManagementProto.LogRecord;
 import com.github.tommwq.applogmanagement.AppLogManagementProto.Command;

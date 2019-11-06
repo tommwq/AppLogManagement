@@ -1,0 +1,8 @@
+* todo 使用vue和element重构查询界面。
+** done 搭建web开发环境。
+   - State "done"       from "todo"       [2019-11-07 周四 01:16] \\
+     使用npm、webpack和vue开发。
+** in-action 使用vue和element开发界面。
+   - State "in-action"  from "todo"       [2019-11-07 周四 01:16]
+* todo 审查和重构log代码。
+* todo android性能测试。
